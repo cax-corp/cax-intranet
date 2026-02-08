@@ -4,7 +4,7 @@ class MessagesService {
         this.currentConversation = null;
         this.refreshInterval = null;
         this.messageRefreshInterval = null;
-        this.apiBase = 'http://localhost:3000/api/messages';
+        this.apiBase = 'https://cax-intranet-server.onrender.com/api/messages';
     }
 
     async sendMessage(sender, receiver, content) {
