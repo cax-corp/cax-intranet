@@ -70,37 +70,19 @@ function createNewUser() {
 // Afficher les utilisateurs créés
 function displayCreatedUsers() {
     const tbody = document.getElementById('usersTableBody');
-    const users = auth.getCreatedUsers();
+    const createdUsers = auth.getCreatedUsers();
+    const allEmployees = DATABASE.getActiveEmployees();
 
-    if (users.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #999;">No users created yet</td></tr>';
-        return;
-    }
-
-    tbody.innerHTML = users.map(user => `
+    // Afficher tous les employés de la base de données
+    tbody.innerHTML = allEmployees.map(emp => `
         <tr>
-            <td><strong>${user.username}</strong></td>
-            <td>${user.role}</td>
-            <td>${user.dateCreated}</td>
-            <td><span class="status-badge active">${user.status}</span></td>
-            <td><button class="btn-delete-user" onclick="deleteUserHandler('${user.username}')">Delete</button></td>
+            <td><strong>${emp.firstName} ${emp.lastName}</strong></td>
+            <td>${emp.username}</td>
+            <td>${emp.department}</td>
+            <td>${emp.position}</td>
+            <td><span class="status-badge active">${emp.status}</span></td>
         </tr>
     `).join('');
-}
-
-// Handler pour supprimer un utilisateur
-function deleteUserHandler(username) {
-    if (!confirm(`Are you sure you want to delete user "${username}"?`)) {
-        return;
-    }
-
-    const result = auth.deleteUser(username);
-    if (result.success) {
-        showMessage(document.getElementById('createUserMessage'), result.message, 'success');
-        displayCreatedUsers();
-    } else {
-        showMessage(document.getElementById('createUserMessage'), result.message, 'error');
-    }
 }
 
 // Afficher les messages
