@@ -122,7 +122,13 @@ class ProfileManager {
 
     // Supprimer l'avatar
     async removeAvatar(username) {
-            return true;
+        return this.updateProfile(username, { avatar: null });
+    }
+
+    // Valider une URL
+    isValidUrl(string) {
+        try {
+            new URL(string);            return true;
         } catch (_) {
             return false;
         }
