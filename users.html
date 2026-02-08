@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - CAX Intranet</title>
+    <link rel="icon" type="image/svg+xml" href="ressources/logo.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="ressources/logo.svg" alt="CAX" width="40" height="40" class="navbar-logo">
+                <h1 class="navbar-title">Intranet</h1>
+            </div>
+            <div class="navbar-menu">
+                <a href="index.html" class="btn-back-dashboard">Back to Dashboard</a>                <a href="messages.html" class="btn-messages" style="padding: 8px 16px; background: #000; color: white; border: none; border-radius: 1px; cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-block;">Messages</a>                <div class="navbar-profile-container">
+                    <div id="profileDiv" class="navbar-profile"></div>
+                    <div id="profileMenu" class="profile-menu">
+                        <button id="profileLogout" class="profile-menu-item" type="button">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <section class="section active">
+            <div class="section-header">
+                <h2>User Management</h2>
+                <p>Create and manage users - CEO Only</p>
+            </div>
+
+            <!-- Create User Form -->
+            <div class="users-container">
+                <div class="create-user-section">
+                    <h3>Create New User</h3>
+                    <form id="createUserForm" class="create-user-form">
+                        <div class="form-group">
+                            <label for="newUsername">Username</label>
+                            <input type="text" id="newUsername" placeholder="Enter username (min 3 characters)" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">Password</label>
+                            <input type="password" id="newPassword" placeholder="Enter password (min 6 characters)" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newRole">Role</label>
+                            <select id="newRole">
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-submit">Create User</button>
+                    </form>
+                    <div id="createUserMessage" class="form-message"></div>
+                </div>
+
+                <!-- Users List -->
+                <div class="users-list-section">
+                    <h3>Active Users</h3>
+                    <div id="usersTableContainer">
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Role</th>
+                                    <th>Date Created</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <!-- Dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <img src="ressources/logo.svg" alt="CAX" width="32" height="32" class="footer-logo">
+        <p>&copy; 2026 CAX Corporation - All rights reserved</p>
+    </footer>
+
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script src="profile-manager.js"></script>
+    <script src="app.js"></script>
+    <script src="users.js"></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Management - CAX Intranet</title>
+    <link rel="icon" type="image/svg+xml" href="ressources/logo.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="ressources/logo.svg" alt="CAX" width="40" height="40" class="navbar-logo">
+            </div>
+            <div class="navbar-menu">
+                <a href="index.html" class="btn-back-dashboard">Back to Dashboard</a>                <a href="messages.html" class="btn-messages" style="padding: 8px 16px; background: #000; color: white; border: none; border-radius: 1px; cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-block;">Messages</a>                <div class="navbar-profile-container">
+                    <div id="profileDiv" class="navbar-profile"></div>
+                    <div id="profileMenu" class="profile-menu">
+                        <button id="profileLogout" class="profile-menu-item" type="button">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <section class="section active">
+            <div class="section-header">
+                <h2>Human Resources Management</h2>
+                <p id="accessLevel">Department Overview</p>
+            </div>
+
+            <div class="hr-filters">
+                <div class="filter-group">
+                    <input type="text" id="searchEmployee" class="search-input" placeholder="Search by name or email...">
+                    <select id="departmentFilter" class="filter-select">
+                        <option value="">All Departments</option>
+                        <option value="hr">HR</option>
+                        <option value="it">IT</option>
+                        <option value="finance">Finance</option>
+                        <option value="admin">Administration</option>
+                    </select>
+                </div>
+                <div class="view-toggle">
+                    <button class="view-btn active" id="cardViewBtn" data-view="card" title="Card View">
+                        <span>⊞ Cards</span>
+                    </button>
+                    <button class="view-btn" id="listViewBtn" data-view="list" title="List View">
+                        <span>≡ List</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="employeesList" class="employees-grid">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <img src="ressources/logo.svg" alt="CAX" width="32" height="32" class="footer-logo">
+        <p>&copy; 2026 CAX Corporation - All rights reserved</p>
+    </footer>
+
+    <!-- Employee Details Modal -->
+    <div id="employeeModal" class="employee-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalEmployeeName">Employee Details</h2>
+                <button class="btn-close-modal" id="closeModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="employee-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Name:</span>
+                        <span class="detail-value" id="detailName">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Position:</span>
+                        <span class="detail-value" id="detailRole">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Department:</span>
+                        <span class="detail-value" id="detailDept">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value" id="detailEmail">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Phone:</span>
+                        <span class="detail-value" id="detailPhone">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Hire Date:</span>
+                        <span class="detail-value" id="detailHireDate">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Salary Level:</span>
+                        <span class="detail-value" id="detailSalary">-</span>
+                    </div>
+                    <div id="ceoActions" class="ceo-actions" style="display: none;">
+                        <div class="detail-row">
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value" id="detailStatus">Active</span>
+                        </div>
+                        <button class="btn-fire" id="fireBtn">Terminate Employment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script src="profile-manager.js"></script>
+    <script src="app.js"></script>
+    <script src="hr-details.js"></script>
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - CAX Intranet</title>
+    <link rel="icon" type="image/svg+xml" href="ressources/logo.svg">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .profile-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .profile-header {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            background: white;
+            padding: 40px;
+            border-radius: 1px;
+            border-left: 4px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .profile-avatar-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-avatar {
+            width: 180px;
+            height: 180px;
+            border-radius: 1px;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 3em;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .profile-avatar.empty::before {
+            content: '👤';
+        }
+
+        .avatar-controls {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 8px;
+        }
+
+        .btn-upload-avatar {
+            background: #333;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 1px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .btn-upload-avatar:hover {
+            background: #222;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-remove-avatar {
+            background: #dc3545;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 1px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .btn-remove-avatar:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .profile-name {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        .profile-role {
+            color: #999;
+            font-size: 1em;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 1px;
+            border-top: 2px solid #ddd;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stat-label {
+            color: #999;
+            font-size: 0.85em;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-section {
+            background: white;
+            padding: 40px;
+            border-radius: 1px;
+            border-left: 4px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            color: #333;
+            margin: 0 0 25px 0;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 1px;
+            font-family: inherit;
+            font-size: 0.95em;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .links-list {
+            margin-top: 20px;
+        }
+
+        .link-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 15px;
+            align-items: center;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 1px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ddd;
+        }
+
+        .link-item strong {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .btn-remove-link {
+            background: #dc3545;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85em;
+        }
+
+        .btn-remove-link:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .add-link-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+            margin-top: 20px;
+        }
+
+        .btn-save {
+            background: #333;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 1px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s;
+            width: 100%;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-save:hover {
+            background: #222;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .message {
+            padding: 15px 20px;
+            border-radius: 1px;
+            margin-bottom: 20px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        #avatarInput {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                grid-template-columns: 1fr;
+                justify-items: center;
+            }
+
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .add-link-form {
+                grid-template-columns: 1fr;
+            }
+
+            .link-item {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-section {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="ressources/logo.svg" alt="CAX" width="40" height="40" class="navbar-logo">
+            </div>
+            <div class="navbar-menu">
+                <a href="index.html" class="btn-back-dashboard">Back to Dashboard</a>                <a href="messages.html" class="btn-messages" style="padding: 8px 16px; background: #000; color: white; border: none; border-radius: 1px; cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-block;">Messages</a>                <div class="navbar-profile-container">
+                    <div id="profileDiv" class="navbar-profile"></div>
+                    <div id="profileMenu" class="profile-menu">
+                        <button id="profileLogout" class="profile-menu-item" type="button">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-avatar-section">
+                    <img id="profileAvatarDisplay" class="profile-avatar empty" alt="Profile Avatar">
+                    <input type="file" id="avatarInput" accept="image/*">
+                    <div class="avatar-controls">
+                        <button class="btn-upload-avatar" onclick="document.getElementById('avatarInput').click()">Upload Photo</button>
+                        <button class="btn-remove-avatar" id="removeAvatarBtn" style="display: none;">Remove Photo</button>
+                    </div>
+                </div>
+
+                <div class="profile-info">
+                    <h1 class="profile-name" id="profileDisplayName">Your Name</h1>
+                    <p class="profile-role" id="profileDisplayRole">Employee</p>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="memberSince">0</div>
+                            <div class="stat-label">Days Member</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="linksCount">0</div>
+                            <div class="stat-label">Links</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="lastUpdate">Just now</div>
+                            <div class="stat-label">Last Updated</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h2 class="section-title">Personal Information</h2>
+                <div id="successMessage" class="message success"></div>
+                <div id="errorMessage" class="message error"></div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="biographyInput">Biography</label>
+                        <textarea id="biographyInput" placeholder="Tell us about yourself..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="locationInput">Location</label>
+                        <input type="text" id="locationInput" placeholder="e.g., Paris, France">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="emailInput">Email</label>
+                        <input type="email" id="emailInput" placeholder="your.email@cax.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneInput">Phone</label>
+                        <input type="tel" id="phoneInput" placeholder="+33 1 23 45 67 89">
+                    </div>
+                </div>
+
+                <button class="btn-save" onclick="savePersonalInfo()">Save Personal Information</button>
+            </div>
+
+            <div class="profile-section">
+                <h2 class="section-title">Links & Social Media</h2>
+                
+                <div class="add-link-form">
+                    <div class="form-group" style="margin: 0;">
+                        <input type="text" id="linkTitleInput" placeholder="Link title (e.g., LinkedIn, Portfolio)">
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <input type="url" id="linkUrlInput" placeholder="https://example.com">
+                    </div>
+                    <button class="btn-save" style="width: auto; padding: 12px 20px;" onclick="addLink()">Add Link</button>
+                </div>
+
+                <div class="links-list" id="linksList"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <img src="ressources/logo.svg" alt="CAX" width="32" height="32" class="footer-logo">
+        <p>&copy; 2026 CAX Corporation - All rights reserved</p>
+    </footer>
+
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script src="profile-manager.js"></script>
+    <script src="app.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html>

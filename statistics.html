@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics - CAX Intranet</title>
+    <link rel="icon" type="image/svg+xml" href="ressources/logo.svg">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="ressources/logo.svg" alt="CAX" width="40" height="40" class="navbar-logo">
+            </div>
+            <div class="navbar-menu">
+                <a href="index.html" class="btn-back-dashboard">Back to Dashboard</a>                <a href="messages.html" class="btn-messages" style="padding: 8px 16px; background: #000; color: white; border: none; border-radius: 1px; cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-block;">Messages</a>                <div class="navbar-profile-container">
+                    <div id="profileDiv" class="navbar-profile"></div>
+                    <div id="profileMenu" class="profile-menu">
+                        <button id="profileLogout" class="profile-menu-item" type="button">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <section class="section active">
+            <div class="section-header">
+                <h2>Company Statistics</h2>
+                <p>Key metrics and analytics for CAX Corporation</p>
+            </div>
+
+            <!-- Key Metrics -->
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h4>Total Employees</h4>
+                        <p class="stat-number">2,847,650</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h4>Global Offices</h4>
+                        <p class="stat-number">247</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h4>Annual Revenue</h4>
+                        <p class="stat-number">€8.47T</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h4>Market Control</h4>
+                        <p class="stat-number">Global</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Major Subsidiaries -->
+            <div class="subsidiaries-section">
+                <h3>Global Strategic Divisions</h3>
+                <div class="subsidiaries-grid">
+                    <div class="subsidiary-card">
+                        <h4>CAX Aerospace</h4>
+                        <p class="subsidiary-employees">238,000 employees</p>
+                        <p class="subsidiary-focus">Orbital Ring & Space Infrastructure - Niveau Z</p>
+                    </div>
+                    <div class="subsidiary-card">
+                        <h4>CAX Energy</h4>
+                        <p class="subsidiary-employees">312,000 employees</p>
+                        <p class="subsidiary-focus">Distribution Énergétique Mondiale</p>
+                    </div>
+                    <div class="subsidiary-card">
+                        <h4>CAX Defense</h4>
+                        <p class="subsidiary-employees">245,000 employees</p>
+                        <p class="subsidiary-focus">Systèmes Défense Avancés</p>
+                    </div>
+                    <div class="subsidiary-card">
+                        <h4>CAX AI</h4>
+                        <p class="subsidiary-employees">189,000 employees</p>
+                        <p class="subsidiary-focus">IA & Computing Quantique</p>
+                    </div>
+                    <div class="subsidiary-card">
+                        <h4>CAX Biotech</h4>
+                        <p class="subsidiary-employees">167,000 employees</p>
+                        <p class="subsidiary-focus">Ingénierie Génétique & Médecine</p>
+                    </div>
+                    <div class="subsidiary-card">
+                        <h4>CAX Finance</h4>
+                        <p class="subsidiary-employees">289,450 employees</p>
+                        <p class="subsidiary-focus">Monopole Bancaire Mondial</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-grid">
+                <!-- Employees by Department -->
+                <div class="chart-container">
+                    <h3>Employees by Department</h3>
+                    <canvas id="departmentChart"></canvas>
+                </div>
+
+                <!-- Employees by Location -->
+                <div class="chart-container">
+                    <h3>Employees by Location</h3>
+                    <canvas id="locationChart"></canvas>
+                </div>
+
+                <!-- Department Distribution -->
+                <div class="chart-container">
+                    <h3>Department Distribution</h3>
+                    <canvas id="distributionChart"></canvas>
+                </div>
+
+                <!-- Growth Trend -->
+                <div class="chart-container">
+                    <h3>Employee Growth Trend (2020-2026)</h3>
+                    <canvas id="growthChart"></canvas>
+                </div>
+
+                <!-- Revenue & Taxes -->
+                <div class="chart-container">
+                    <h3>Revenue & Taxes Trend (2015-2026)</h3>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Detailed Statistics Table -->
+            <div class="stats-table-section">
+                <h3>Department Details</h3>
+                <table class="stats-table">
+                    <thead>
+                        <tr>
+                            <th>Department</th>
+                            <th>Employees</th>
+                            <th>Percentage</th>
+                            <th>Average Salary</th>
+                            <th>Budget</th>
+                        </tr>
+                    </thead>
+                    <tbody id="departmentTableBody">
+                        <!-- Dynamically populated -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <img src="ressources/logo.svg" alt="CAX" width="32" height="32" class="footer-logo">
+        <p>&copy; 2026 CAX Corporation - All rights reserved</p>
+    </footer>
+
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script src="profile-manager.js"></script>
+    <script src="app.js"></script>
+    <script src="statistics.js"></script>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Report - CAX Intranet</title>
+    <link rel="icon" type="image/svg+xml" href="ressources/logo.svg">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .document-content {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        .document-page {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            line-height: 1.8;
+            color: #333;
+            border-radius: 1px;
+        }
+        
+        .document-header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 30px;
+        }
+        
+        .document-header h1 {
+            font-size: 2.5em;
+            margin: 0 0 10px 0;
+            color: #000000;
+            font-weight: 700;
+        }
+        
+        .document-meta {
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        .document-section {
+            margin: 40px 0;
+        }
+        
+        .document-section h2 {
+            font-size: 1.5em;
+            color: #000000;
+            margin: 30px 0 15px 0;
+            text-transform: uppercase;
+            border-left: 1px solid #000000;
+            padding-left: 15px;
+        }
+        
+        .document-section h3 {
+            font-size: 1.1em;
+            color: #000000;
+            margin: 20px 0 10px 0;
+        }
+        
+        .document-section p {
+            margin: 15px 0;
+            text-align: justify;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th {
+            background: #f0f0f0;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .document-section ul {
+            margin: 15px 0 15px 40px;
+        }
+        
+        .document-section li {
+            margin: 10px 0;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+        }
+        
+        .document-footer {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="ressources/logo.svg" alt="CAX" width="40" height="40" class="navbar-logo">
+            </div>
+            <div class="navbar-menu">
+                <a href="index.html" class="btn-back-dashboard">Back to Intranet</a>
+                <a href="messages.html" class="btn-messages" style="padding: 8px 16px; background: #000; color: white; border: none; border-radius: 1px; cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-block;">Messages</a>
+                <div class="navbar-profile-container">
+                    <div id="profileDiv" class="navbar-profile"></div>
+                    <div id="profileMenu" class="profile-menu">
+                        <button id="profileLogout" class="profile-menu-item" type="button">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="document-content">
+            <div class="document-page">
+                <div class="document-header">
+                    <h1>Monthly Report</h1>
+                    <div class="document-meta">Updated: 01 February 2026 | January 2026 Performance</div>
+                </div>
+
+                <div class="document-section">
+                    <h2>Executive Summary</h2>
+                    <p>
+                        January 2026 has been an exceptionally strong month for CAX Corporation, with significant achievements across all divisions and geographic regions. Global workforce remains stable at 2,847,650 employees with consistent performance across our 247 international offices. This report summarizes key performance indicators, organizational developments, and strategic initiatives for the month.
+                    </p>
+                </div>
+
+                <div class="document-section">
+                    <h2>Key Performance Indicators</h2>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-label">Total Revenue</div>
+                            <div class="metric-value">€845.8B</div>
+                            <div class="metric-label" style="opacity: 0.7;">Monthly average</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Employee Satisfaction</div>
+                            <div class="metric-value">94.2%</div>
+                            <div class="metric-label" style="opacity: 0.7;">+2.1% vs December</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Project Completion Rate</div>
+                            <div class="metric-value">98.7%</div>
+                            <div class="metric-label" style="opacity: 0.7;">On or ahead of schedule</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">New Hires</div>
+                            <div class="metric-value">2,456</div>
+                            <div class="metric-label" style="opacity: 0.7;">Across all departments</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="document-section">
+                    <h2>Divisional Performance</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Division</th>
+                                <th>Employees</th>
+                                <th>Revenue Contribution</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CAX Aerospace</td>
+                                <td>238,000</td>
+                                <td>€287.4B</td>
+                                <td style="color: green;">Exceeding targets</td>
+                            </tr>
+                            <tr>
+                                <td>CAX Energy</td>
+                                <td>312,000</td>
+                                <td>€156.8B</td>
+                                <td style="color: green;">On target</td>
+                            </tr>
+                            <tr>
+                                <td>CAX Defense</td>
+                                <td>245,000</td>
+                                <td>€198.5B</td>
+                                <td style="color: green;">Exceeding targets</td>
+                            </tr>
+                            <tr>
+                                <td>CAX AI</td>
+                                <td>189,000</td>
+                                <td>€134.2B</td>
+                                <td style="color: green;">Exceeding targets</td>
+                            </tr>
+                            <tr>
+                                <td>CAX Biotech</td>
+                                <td>167,000</td>
+                                <td>€78.5B</td>
+                                <td style="color: green;">On target</td>
+                            </tr>
+                            <tr>
+                                <td>CAX Finance</td>
+                                <td>289,450</td>
+                                <td>€190.4B</td>
+                                <td style="color: green;">Exceeding targets</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="document-section">
+                    <h2>Regional Performance</h2>
+                    <h3>Europe</h3>
+                    <p>
+                        European operations continue to perform strongly with 42% revenue contribution. France (headquarters) maintains 425,650 employees with exceptional productivity metrics. German operations grew by 3.2% and UK operations showed stable performance.
+                    </p>
+
+                    <h3>Americas</h3>
+                    <p>
+                        North American operations experienced robust growth with 31% revenue share. New York office expanded operations with 489,450 employees. Chicago and Toronto locations ramped up hiring initiatives. Integration of new talent pool shows promising early results.
+                    </p>
+
+                    <h3>Asia-Pacific</h3>
+                    <p>
+                        Asia-Pacific region delivered 27% of global revenue. Tokyo operations exceeded quarterly targets by 5.4%. Singapore hub maintained leadership position in Southeast Asian markets. Shanghai expansion continues on schedule with planned 50,000 additional hires.
+                    </p>
+                </div>
+
+                <div class="document-section">
+                    <h2>Strategic Initiatives</h2>
+                    <h3>Orbital Infrastructure Project</h3>
+                    <p>
+                        CAX Aerospace division achieved major milestone in the Orbital Ring Infrastructure initiative. Project is 23% complete and tracking to 2027 completion date. Budget performance at 98.2% of projections. Team morale and retention rates among highest in company history.
+                    </p>
+
+                    <h3>AI & Computing Quantique</h3>
+                    <p>
+                        CAX AI division launched 4 new quantum computing prototypes this month. Partnerships with leading research institutions expanded. Patent applications filed for 12 breakthrough technologies. R&D investment increased to €2.4B quarterly.
+                    </p>
+
+                    <h3>Renewable Energy Expansion</h3>
+                    <p>
+                        CAX Energy completed acquisition of three renewable energy facilities. Combined capacity of 4.2 GW now online. Carbon footprint reduction targets exceeded by 12%. Renewable energy now represents 58% of portfolio.
+                    </p>
+                </div>
+
+                <div class="document-section">
+                    <h2>Human Resources</h2>
+                    <p>
+                        January recruitment efforts were highly successful with 2,456 new employees onboarded globally. Retention rate stands at 94.8%, among the highest in industry. Employee training programs reached 187,450 participants across all divisions. Executive development program welcomed 48 participants.
+                    </p>
+                    
+                    <div class="highlight">
+                        <strong>Notice:</strong> New comprehensive health insurance plan launches February 1st with expanded mental health and wellness coverage for all employees.
+                    </div>
+                </div>
+
+                <div class="document-section">
+                    <h2>Organizational Changes</h2>
+                    <ul>
+                        <li>Promoted 342 employees to senior management positions</li>
+                        <li>Restructured IT Security division under new Chief Security Officer</li>
+                        <li>Expanded HR department by 15% to support 2.8M employee base</li>
+                        <li>Established new Innovation Center in Berlin</li>
+                        <li>Created 4 new research laboratories across Asia-Pacific region</li>
+                    </ul>
+                </div>
+
+                <div class="document-section">
+                    <h2>Challenges & Mitigation</h2>
+                    <p>
+                        While January showed exceptional performance, we identified several areas requiring attention. Global supply chain experienced minor delays in Q1 projections. Mitigation strategies implemented including diversified sourcing and logistics rerouting. Expected resolution by end of February.
+                    </p>
+                    <p>
+                        Cyber security threats remain elevated sector-wide. IT Security division implemented enhanced protective measures and increased monitoring protocols. All employees received updated security awareness training.
+                    </p>
+                </div>
+
+                <div class="document-section">
+                    <h2>Outlook</h2>
+                    <p>
+                        February projections remain positive with expected continued strong performance across all divisions. Market conditions favorable for aerospace and energy sectors. AI division expectations exceed prior guidance. Strategic initiatives on track. Overall company trajectory remains upward with confidence in 2026 annual targets.
+                    </p>
+                </div>
+
+                <div class="document-footer">
+                    <p>CAX Corporation | Executive Management | Financial Year 2026 | Confidential</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <img src="ressources/logo.svg" alt="CAX" width="32" height="32" class="footer-logo">
+        <p>&copy; 2026 CAX Corporation - All rights reserved</p>
+    </footer>
+
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script src="profile-manager.js"></script>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileDiv = document.getElementById('profileDiv');
+            if (profileDiv && auth.getUsername()) {
+                const username = auth.getUsername();
+                const isCEO = auth.isCEO && auth.isCEO();
+                profileDiv.textContent = isCEO ? `${username} (CEO)` : `Bienvenue, ${username}`;
+            }
+        });
+    </script>
+</body>
+</html>

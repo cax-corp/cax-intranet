@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guide - CAX Intranet</title>
+    <link rel="icon" type="image/svg+xml" href="ressources/logo.svg">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .document-content {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        .document-page {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            line-height: 1.8;
+            color: #333;
+            border-radius: 1px;
+        }
+        
+        .document-header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 30px;
+        }
+        
+        .document-header h1 {
+            font-size: 2.5em;
+            margin: 0 0 10px 0;
+            color: #000000;
+            font-weight: 700;
+        }
+        
+        .document-meta {
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        .document-section {
+            margin: 40px 0;
+        }
+        
+        .document-section h2 {
+            font-size: 1.5em;
+            color: #000000;
+            margin: 30px 0 15px 0;
+            text-transform: uppercase;
+            border-left: 1px solid #000000;
+            padding-left: 15px;
+        }
+        
+        .document-section h3 {
+            font-size: 1.1em;
+            color: #000000;
+            margin: 20px 0 10px 0;
+        }
+        
+        .document-section p {
+            margin: 15px 0;
+            text-align: justify;
+        }
+        
+        .document-section ul {
+            margin: 15px 0 15px 40px;
+        }
+        
+        .document-section li {
+            margin: 10px 0;
+        }
+        
+        .code-block {
+            background: #f5f5f5;
+            padding: 15px;
+            border-left: 1px solid #000000;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        
+        .document-footer {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="ressources/logo.svg" alt="CAX" width="40" height="40" class="navbar-logo">
+            </div>
+            <div class="navbar-menu">
+                <a href="index.html" class="btn-back-dashboard">Back to Intranet</a>
+                <a href="messages.html" class="btn-messages" style="padding: 8px 16px; background: #000; color: white; border: none; border-radius: 1px; cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-block;">Messages</a>
+                <div class="navbar-profile-container">
+                    <div id="profileDiv" class="navbar-profile"></div>
+                    <div id="profileMenu" class="profile-menu">
+                        <button id="profileLogout" class="profile-menu-item" type="button">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="document-content">
+            <div class="document-page">
+                <div class="document-header">
+                    <h1>User Guide</h1>
+                    <div class="document-meta">Updated: 10 January 2026</div>
+                </div>
+
+                <div class="document-section">
+                    <h2>Welcome to the CAX Corporation Intranet</h2>
+                    <p>
+                        This comprehensive guide will help you navigate the CAX Corporation Intranet and make the most of its features. The intranet is your central hub for communication, information access, and collaboration across our global organization with 2.8 million employees across 247 locations.
+                    </p>
+                </div>
+
+                <div class="document-section">
+                    <h2>Getting Started</h2>
+                    <h3>Login</h3>
+                    <p>
+                        Access the intranet by entering your unique username and password. Your credentials have been provided by your HR department. For security purposes, never share your login information with colleagues.
+                    </p>
+                    <h3>Your Profile</h3>
+                    <p>
+                        Your profile appears in the top-right corner of the interface. Click on it to access your personal settings, preferences, and logout option. You can update your profile information through the HR Management section.
+                    </p>
+                </div>
+
+                <div class="document-section">
+                    <h2>Main Features</h2>
+                    <h3>Dashboard</h3>
+                    <p>
+                        The Dashboard provides an overview of company statistics, recent announcements, and quick links to major sections. Here you'll find:
+                    </p>
+                    <ul>
+                        <li>Company-wide announcements and news</li>
+                        <li>Key performance indicators (KPIs)</li>
+                        <li>Quick access to HR, Statistics, and Global Locations</li>
+                        <li>Support ticket submission</li>
+                    </ul>
+
+                    <h3>Documents</h3>
+                    <p>
+                        Access important company documents, policies, and resources. All documents are organized by category and date. You can view document details by clicking on any item. Recently updated documents appear at the top of the list.
+                    </p>
+
+                    <h3>Announcements</h3>
+                    <p>
+                        Stay informed with the latest company announcements, updates, and important notices. Announcements are categorized by priority level:
+                    </p>
+                    <ul>
+                        <li><strong>High Priority:</strong> Urgent company-wide updates</li>
+                        <li><strong>Normal:</strong> Regular announcements and news</li>
+                        <li><strong>Info:</strong> General information and updates</li>
+                    </ul>
+
+                    <h3>Team Directory</h3>
+                    <p>
+                        Browse employee information and connect with colleagues. Filter by department or location to find specific team members. Direct contact information is available for all employees.
+                    </p>
+                </div>
+
+                <div class="document-section">
+                    <h2>Advanced Features</h2>
+                    <h3>HR Management</h3>
+                    <p>
+                        Access HR services and employee information. Features include employee directory, department overviews, and HR contact information. Administrators can manage employee records in this section.
+                    </p>
+
+                    <h3>Statistics & Analytics</h3>
+                    <p>
+                        View comprehensive company statistics including:
+                    </p>
+                    <ul>
+                        <li>Employee distribution by department and location</li>
+                        <li>Revenue and financial performance</li>
+                        <li>Company growth trends</li>
+                        <li>Strategic division information</li>
+                    </ul>
+
+                    <h3>Global Locations</h3>
+                    <p>
+                        Interactive map displaying all 247 CAX Corporation offices worldwide. Click on any location to view office details, employee count, and department information. Offices span six continents across major global business hubs.
+                    </p>
+
+                    <h3>Support Tickets</h3>
+                    <p>
+                        Submit technical issues or support requests through the Support Ticket system. Your request will be tracked and responded to by our IT support team. Tickets are categorized by priority and assigned to appropriate departments.
+                    </p>
+                </div>
+
+                <div class="document-section">
+                    <h2>User Management (CEO Only)</h2>
+                    <p>
+                        Chief Executive Officers have access to the User Management section where they can:
+                    </p>
+                    <ul>
+                        <li>Create new user accounts for employees</li>
+                        <li>Manage user roles and permissions</li>
+                        <li>View all active users in the system</li>
+                        <li>Delete inactive user accounts</li>
+                    </ul>
+                </div>
+
+                <div class="document-section">
+                    <h2>Best Practices</h2>
+                    <h3>Security</h3>
+                    <ul>
+                        <li>Never leave your computer unattended while logged in</li>
+                        <li>Change your password regularly</li>
+                        <li>Report suspicious activities immediately to IT</li>
+                        <li>Never share your credentials with others</li>
+                    </ul>
+
+                    <h3>Navigation</h3>
+                    <ul>
+                        <li>Use the navigation menu to access different sections</li>
+                        <li>Click the back button to return to the dashboard</li>
+                        <li>Search functions are available in most sections</li>
+                        <li>Filter options help you find specific information quickly</li>
+                    </ul>
+                </div>
+
+                <div class="document-section">
+                    <h2>Troubleshooting</h2>
+                    <h3>Cannot Login</h3>
+                    <p>
+                        Check that you have entered your username and password correctly. Passwords are case-sensitive. If you've forgotten your password, contact your HR department to reset it.
+                    </p>
+
+                    <h3>Pages Not Loading</h3>
+                    <p>
+                        Clear your browser cache and try refreshing the page. Ensure you have a stable internet connection. If problems persist, submit a support ticket with details about the issue.
+                    </p>
+
+                    <h3>Profile Not Displaying</h3>
+                    <p>
+                        Make sure you're logged in properly. Try logging out and logging back in. Check that your browser allows cookies for the intranet domain.
+                    </p>
+                </div>
+
+                <div class="document-section">
+                    <h2>Contact Information</h2>
+                    <p>
+                        For technical support, use the Support Ticket system. For HR inquiries, visit the HR Management section or contact your local HR office. For executive matters, contact the CEO office directly.
+                    </p>
+                </div>
+
+                <div class="document-footer">
+                    <p>CAX Corporation | IT Department | Document Classification: Internal | Version 2.1</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <img src="ressources/logo.svg" alt="CAX" width="32" height="32" class="footer-logo">
+        <p>&copy; 2026 CAX Corporation - All rights reserved</p>
+    </footer>
+
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script src="profile-manager.js"></script>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileDiv = document.getElementById('profileDiv');
+            if (profileDiv && auth.getUsername()) {
+                const username = auth.getUsername();
+                const isCEO = auth.isCEO && auth.isCEO();
+                profileDiv.textContent = isCEO ? `${username} (CEO)` : `Bienvenue, ${username}`;
+            }
+        });
+    </script>
+</body>
+</html>

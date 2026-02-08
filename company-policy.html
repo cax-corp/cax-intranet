@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Policy - CAX Intranet</title>
+    <link rel="icon" type="image/svg+xml" href="ressources/logo.svg">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .document-content {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        .document-page {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            line-height: 1.8;
+            color: #333;
+            border-radius: 1px;
+        }
+        
+        .document-header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 30px;
+        }
+        
+        .document-header h1 {
+            font-size: 2.5em;
+            margin: 0 0 10px 0;
+            color: #000000;
+            font-weight: 700;
+        }
+        
+        .document-meta {
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        .document-section {
+            margin: 40px 0;
+        }
+        
+        .document-section h2 {
+            font-size: 1.5em;
+            color: #000000;
+            margin: 30px 0 15px 0;
+            border-left: 1px solid #000000;
+            padding-left: 15px;
+            text-transform: uppercase;
+        }
+        
+        .document-section h3 {
+            font-size: 1.1em;
+            color: #000000;
+            margin: 20px 0 10px 0;
+        }
+        
+        .document-section p {
+            margin: 15px 0;
+            text-align: justify;
+        }
+        
+        .document-section ul {
+            margin: 15px 0 15px 40px;
+        }
+        
+        .document-section li {
+            margin: 10px 0;
+        }
+        
+        .document-footer {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="ressources/logo.svg" alt="CAX" width="40" height="40" class="navbar-logo">
+            </div>
+            <div class="navbar-menu">
+                <a href="index.html" class="btn-back-dashboard">Back to Intranet</a>
+                <a href="messages.html" class="btn-messages" style="padding: 8px 16px; background: #000; color: white; border: none; border-radius: 1px; cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-block;">Messages</a>
+                <div class="navbar-profile-container">
+                    <div id="profileDiv" class="navbar-profile"></div>
+                    <div id="profileMenu" class="profile-menu">
+                        <button id="profileLogout" class="profile-menu-item" type="button">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="document-content">
+            <div class="document-page">
+                <div class="document-header">
+                    <h1>Company Policy</h1>
+                    <div class="document-meta">Updated: 15 January 2026</div>
+                </div>
+
+                <div class="document-section">
+                    <h2>1. Mission & Values</h2>
+                    <p>
+                        CAX Corporation is committed to delivering excellence across all business sectors globally. Our mission is to innovate, lead, and create sustainable value for our stakeholders through cutting-edge technology, strategic partnerships, and exceptional human talent.
+                    </p>
+                    <h3>Core Values</h3>
+                    <ul>
+                        <li><strong>Innovation:</strong> We drive technological advancement across aerospace, energy, defense, AI, biotech, and finance</li>
+                        <li><strong>Integrity:</strong> We maintain the highest ethical standards in all operations</li>
+                        <li><strong>Excellence:</strong> We deliver world-class results in every endeavor</li>
+                        <li><strong>Sustainability:</strong> We protect our environment and communities for future generations</li>
+                        <li><strong>Global Responsibility:</strong> We operate responsibly across 247 offices worldwide</li>
+                    </ul>
+                </div>
+
+                <div class="document-section">
+                    <h2>2. Code of Conduct</h2>
+                    <h3>Professional Behavior</h3>
+                    <p>
+                        All employees are expected to conduct themselves with professionalism, respect, and integrity. Discrimination, harassment, or any form of misconduct is strictly prohibited and will result in immediate disciplinary action up to and including termination.
+                    </p>
+                    <h3>Confidentiality</h3>
+                    <p>
+                        Employees must maintain strict confidentiality regarding proprietary information, trade secrets, and strategic initiatives. Unauthorized disclosure of sensitive company information is grounds for immediate dismissal and legal action.
+                    </p>
+                    <h3>Conflict of Interest</h3>
+                    <p>
+                        Employees must disclose any potential conflicts of interest immediately to their supervisor and the Ethics Committee. Personal business interests must not interfere with job responsibilities.
+                    </p>
+                </div>
+
+                <div class="document-section">
+                    <h2>3. Work Environment & Safety</h2>
+                    <p>
+                        CAX Corporation is committed to providing a safe, healthy, and inclusive work environment. All facilities comply with international health and safety standards. Zero tolerance policy for workplace violence and harassment.
+                    </p>
+                    <h3>Health & Wellness</h3>
+                    <ul>
+                        <li>Comprehensive health insurance coverage for all employees</li>
+                        <li>Mental health support and counseling services</li>
+                        <li>Fitness programs and wellness initiatives</li>
+                        <li>Ergonomic workspace assessments</li>
+                    </ul>
+                </div>
+
+                <div class="document-section">
+                    <h2>4. Diversity & Inclusion</h2>
+                    <p>
+                        CAX Corporation celebrates diversity and actively promotes inclusion. We employ talented individuals from over 150 countries speaking 80+ languages. Equal opportunity is guaranteed regardless of race, gender, age, religion, sexual orientation, or disability.
+                    </p>
+                </div>
+
+                <div class="document-section">
+                    <h2>5. Performance & Development</h2>
+                    <p>
+                        Employees receive annual performance reviews and have access to extensive professional development programs. Career advancement is based on merit, performance, and contribution to organizational goals.
+                    </p>
+                </div>
+
+                <div class="document-section">
+                    <h2>6. Compensation & Benefits</h2>
+                    <ul>
+                        <li>Competitive salary packages aligned with industry standards</li>
+                        <li>Performance bonuses and profit-sharing programs</li>
+                        <li>Comprehensive health, dental, and vision insurance</li>
+                        <li>Retirement pension plans with company matching</li>
+                        <li>Generous paid time off (25+ days annually)</li>
+                        <li>Parental leave and family support programs</li>
+                    </ul>
+                </div>
+
+                <div class="document-section">
+                    <h2>7. Technology & Data Protection</h2>
+                    <p>
+                        All company data and systems are protected by advanced cybersecurity measures. Employees are required to comply with information security protocols and report any suspicious activity immediately to the IT Security team.
+                    </p>
+                </div>
+
+                <div class="document-section">
+                    <h2>8. Grievance & Dispute Resolution</h2>
+                    <p>
+                        Employees with concerns or grievances are encouraged to speak with their supervisors or HR departments. CAX maintains an open-door policy and strictly prohibits retaliation against employees who report concerns in good faith.
+                    </p>
+                </div>
+
+                <div class="document-footer">
+                    <p>CAX Corporation | Human Resources Department | Document Classification: Internal</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <img src="ressources/logo.svg" alt="CAX" width="32" height="32" class="footer-logo">
+        <p>&copy; 2026 CAX Corporation - All rights reserved</p>
+    </footer>
+
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script src="profile-manager.js"></script>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileDiv = document.getElementById('profileDiv');
+            if (profileDiv && auth.getUsername()) {
+                const username = auth.getUsername();
+                const isCEO = auth.isCEO && auth.isCEO();
+                profileDiv.textContent = isCEO ? `${username} (CEO)` : `Bienvenue, ${username}`;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Ticket - CAX Intranet</title>
+    <link rel="icon" type="image/svg+xml" href="ressources/logo.svg">
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/index.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="ressources/logo.svg" alt="CAX" width="40" height="40" class="navbar-logo">
+            </div>
+            <div class="navbar-menu">
+                <a href="index.html" class="nav-link">Back to Intranet</a>
+                <a href="messages.html" class="btn-messages" style="padding: 8px 16px; background: #000; color: white; border: none; border-radius: 1px; cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-block;">Messages</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <section class="section active">
+            <div class="section-header">
+                <h2>Create Support Ticket</h2>
+                <p>Submit a support request or report an issue</p>
+            </div>
+
+            <div class="ticket-form-container">
+                <form id="ticketForm" class="ticket-form">
+                    <div class="form-group">
+                        <label for="ticketTitle">Subject *</label>
+                        <input type="text" id="ticketTitle" name="title" required placeholder="Brief description of your issue">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ticketCategory">Category *</label>
+                        <select id="ticketCategory" name="category" required>
+                            <option value="">Select a category</option>
+                            <option value="technical">Technical Issue</option>
+                            <option value="access">Access Problem</option>
+                            <option value="feature">Feature Request</option>
+                            <option value="documentation">Documentation</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ticketPriority">Priority *</label>
+                        <select id="ticketPriority" name="priority" required>
+                            <option value="">Select priority</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ticketDescription">Description *</label>
+                        <textarea id="ticketDescription" name="description" rows="8" required placeholder="Please provide as many details as possible..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ticketEmail">Email *</label>
+                        <input type="email" id="ticketEmail" name="email" required placeholder="your.email@cax.com">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">Create Ticket</button>
+                        <a href="index.html" class="btn-cancel">Cancel</a>
+                    </div>
+                </form>
+
+                <div id="successMessage" class="success-message" style="display: none;">
+                    ✓ Ticket created successfully! You will receive a confirmation email shortly.
+                </div>
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <img src="ressources/logo.svg" alt="CAX" width="32" height="32" class="footer-logo">
+        <p>&copy; 2026 CAX Corporation - All rights reserved</p>
+    </footer>
+
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script src="profile-manager.js"></script>
+    <script src="app.js"></script>
+    <script src="ticket.js"></script>
+</body>
+</html>

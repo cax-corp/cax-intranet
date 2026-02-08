@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intranet</title>
+    <link rel="icon" type="image/svg+xml" href="ressources/logo.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="ressources/logo.svg" alt="CAX" width="40" height="40" class="navbar-logo">
+            </div>
+            <div class="navbar-menu">
+                <a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a>
+                <a href="#documents" class="nav-link" data-section="documents">Documents</a>
+                <a href="#annonces" class="nav-link" data-section="annonces">Annoncements</a>
+                <a href="#equipe" class="nav-link" data-section="equipe">Team</a>
+                <a href="messages.html" class="btn-messages" style="padding: 8px 16px; background: #000; color: white; border: none; border-radius: 1px; cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-block;">Messages</a>
+                <div class="navbar-profile-container">
+                    <div id="profileDiv" class="navbar-profile"></div>
+                    <div id="profileMenu" class="profile-menu">
+                        <button id="profileLogout" class="profile-menu-item" type="button">Logout</button>
+                    </div>
+                </div>
+                <button id="supportBtn" class="btn-support">Support</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <!-- Section Dashboard -->
+        <section id="dashboard" class="section active">
+            <div class="section-header">
+                <h2>Dashboard</h2>
+                <p>Welcome to the CAX Intranet</p>
+            </div>
+            <div class="dashboard-grid">
+                <div class="dashboard-card" style="cursor: pointer;" onclick="window.location.href='messages.html';">
+                    <h3>💬 Messages</h3>
+                    <p>Contact other users</p>
+                </div>
+                <div class="dashboard-card stats-link-dashboard" style="cursor: pointer;">
+                    <h3>📊 Statistics</h3>
+                    <p>Company data and analytics</p>
+                </div>
+                <div class="dashboard-card" style="cursor: pointer;" onclick="window.location.href='profile.html';">
+                    <h3>👤 My Profile</h3>
+                    <p>Manage your profile and avatar</p>
+                </div>
+                <div class="dashboard-card">
+                    <h3>📋 Latest Announcements</h3>
+                    <p>Stay informed of the news</p>
+                </div>
+                <div class="dashboard-card hr-link-dashboard" style="cursor: pointer;">
+                    <h3>👥 Human Resources</h3>
+                    <p>Team of 1700+ collaborators</p>
+                </div>
+                <div class="dashboard-card locations-link-dashboard" style="cursor: pointer;">
+                    <h3>🌍 Global Locations</h3>
+                    <p>CAX offices worldwide</p>
+                </div>
+                <div class="dashboard-card users-link-dashboard" style="cursor: pointer; display: none;">
+                    <h3>👤 User Management</h3>
+                    <p>Create and manage users</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Documents -->
+        <section id="documents" class="section">
+            <div class="section-header">
+                <h2>Documents</h2>
+                <p>Company resources and files</p>
+            </div>
+            <div class="documents-list">
+                <div class="document-item">
+                    <span class="doc-icon">📄</span>
+                    <div class="doc-info">
+                        <h3>Company Policy</h3>
+                        <p>Updated: 15 January 2026</p>
+                    </div>
+                    <a href="company-policy.html" class="btn-download">View</a>
+                </div>
+                <div class="document-item">
+                    <span class="doc-icon">📋</span>
+                    <div class="doc-info">
+                        <h3>User Guide</h3>
+                        <p>Updated: 10 January 2026</p>
+                    </div>
+                    <a href="user-guide.html" class="btn-download">View</a>
+                </div>
+                <div class="document-item">
+                    <span class="doc-icon">📊</span>
+                    <div class="doc-info">
+                        <h3>Monthly Report</h3>
+                        <p>Updated: 01 February 2026</p>
+                    </div>
+                    <a href="monthly-report.html" class="btn-download">View</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Annonces -->
+        <section id="annonces" class="section">
+            <div class="section-header">
+                <h2>Announcements</h2>
+                <p>Important news and communications</p>
+            </div>
+            <div class="announcements-list">
+                <div class="announcement-item">
+                    <div class="announcement-date">02 Feb 2026</div>
+                    <div class="announcement-content">
+                        <h3>Welcome to the new intranet</h3>
+                        <p>The new CAX intranet is now online with improved features and a better interface.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Équipe -->
+        <section id="equipe" class="section">
+            <div class="section-header">
+                <h2>Team</h2>
+                <p>Company directory</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">👔</div>
+                    <h3>Administration</h3>
+                    <p>Direction and management</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">💻</div>
+                    <h3>IT</h3>
+                    <p>Information Technology and Systems</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">📊</div>
+                    <h3>Finance</h3>
+                    <p>Accounting and Finance</p>
+                </div>
+                <div class="team-card hr-link" style="cursor: pointer;">
+                    <div class="team-avatar">👥</div>
+                    <h3>HR</h3>
+                    <p>Human Resources</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <img src="ressources/logo.svg" alt="CAX" width="32" height="32" class="footer-logo">
+        <p>&copy; 2026 CAX Corporation - All rights reserved</p>
+    </footer>
+
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script src="profile-manager.js"></script>
+    <script src="app.js"></script>
+    <script src="dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Navigation vers Statistics depuis Dashboard card
+            const statsCard = document.querySelector('.dashboard-card.stats-link-dashboard');
+            if (statsCard) {
+                statsCard.addEventListener('click', () => {
+                    window.location.href = 'statistics.html';
+                });
+            }
+
+            // Navigation vers HR depuis Dashboard card
+            const hrDashboardCard = document.querySelector('.dashboard-card.hr-link-dashboard');
+            if (hrDashboardCard) {
+                hrDashboardCard.addEventListener('click', () => {
+                    window.location.href = 'hr.html';
+                });
+            }
+
+            // Navigation vers Locations depuis Dashboard card
+            const locationsCard = document.querySelector('.dashboard-card.locations-link-dashboard');
+            if (locationsCard) {
+                locationsCard.addEventListener('click', () => {
+                    window.location.href = 'locations.html';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
