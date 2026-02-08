@@ -17,55 +17,59 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Load user profile data
-function loadProfileData() {
+async function loadProfileData() {
     if (!currentUsername) return;
 
-    const profile = profileManager.getProfile(currentUsername);
-    currentProfile = profile;
+    try {
+        const profile = await profileManager.getProfile(currentUsername);
+        currentProfile = profile;
 
-    // Display name and role
-    document.getElementById('profileDisplayName').textContent = currentUsername.charAt(0).toUpperCase() + currentUsername.slice(1);
-    document.getElementById('profileDisplayRole').textContent = profile.department || 'Employee';
+        // Display name and role
+        document.getElementById('profileDisplayName').textContent = currentUsername.charAt(0).toUpperCase() + currentUsername.slice(1);
+        document.getElementById('profileDisplayRole').textContent = profile.department || 'Employee';
 
-    // Display avatar
-    if (profile.avatar) {
-        const avatarImg = document.getElementById('profileAvatarDisplay');
-        avatarImg.src = profile.avatar;
-        avatarImg.classList.remove('empty');
-        document.getElementById('removeAvatarBtn').style.display = 'block';
+        // Display avatar
+        if (profile.avatar) {
+            const avatarImg = document.getElementById('profileAvatarDisplay');
+            avatarImg.src = profile.avatar;
+            avatarImg.classList.remove('empty');
+            document.getElementById('removeAvatarBtn').style.display = 'block';
+        }
+
+        // Display stats
+        const joinDate = new Date(profile.joinDate);
+        const today = new Date();
+        const daysSince = Math.floor((today - joinDate) / (1000 * 60 * 60 * 24));
+        document.getElementById('memberSince').textContent = daysSince;
+        document.getElementById('linksCount').textContent = profile.links.length;
+
+        // Format last update
+        if (profile.lastUpdated) {
+            const lastUpdate = new Date(profile.lastUpdated);
+            const diffMs = today - lastUpdate;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            let timeStr = 'Just now';
+            if (diffMins > 0 && diffMins < 60) timeStr = `${diffMins}m ago`;
+            else if (diffHours > 0 && diffHours < 24) timeStr = `${diffHours}h ago`;
+            else if (diffDays > 0) timeStr = `${diffDays}d ago`;
+            
+            document.getElementById('lastUpdate').textContent = timeStr;
+        }
+
+        // Load form fields
+        document.getElementById('biographyInput').value = profile.bio || '';
+        document.getElementById('locationInput').value = profile.location || '';
+        document.getElementById('emailInput').value = profile.email || '';
+        document.getElementById('phoneInput').value = profile.phone || '';
+
+        // Load links
+        displayLinks();
+    } catch (error) {
+        console.error('Erreur lors du chargement du profil:', error);
     }
-
-    // Display stats
-    const joinDate = new Date(profile.joinDate);
-    const today = new Date();
-    const daysSince = Math.floor((today - joinDate) / (1000 * 60 * 60 * 24));
-    document.getElementById('memberSince').textContent = daysSince;
-    document.getElementById('linksCount').textContent = profile.links.length;
-
-    // Format last update
-    if (profile.lastUpdated) {
-        const lastUpdate = new Date(profile.lastUpdated);
-        const diffMs = today - lastUpdate;
-        const diffMins = Math.floor(diffMs / 60000);
-        const diffHours = Math.floor(diffMs / 3600000);
-        const diffDays = Math.floor(diffMs / 86400000);
-        
-        let timeStr = 'Just now';
-        if (diffMins > 0 && diffMins < 60) timeStr = `${diffMins}m ago`;
-        else if (diffHours > 0 && diffHours < 24) timeStr = `${diffHours}h ago`;
-        else if (diffDays > 0) timeStr = `${diffDays}d ago`;
-        
-        document.getElementById('lastUpdate').textContent = timeStr;
-    }
-
-    // Load form fields
-    document.getElementById('biographyInput').value = profile.bio || '';
-    document.getElementById('locationInput').value = profile.location || '';
-    document.getElementById('emailInput').value = profile.email || '';
-    document.getElementById('phoneInput').value = profile.phone || '';
-
-    // Load links
-    displayLinks();
 }
 
 // Display user links
@@ -143,8 +147,8 @@ function handleAvatarUpload(e) {
     uploadBtn.textContent = 'Uploading...';
     uploadBtn.disabled = true;
 
-    // Envoyer au serveur
-    fetch('http://localhost:3000/upload-avatar', {
+    // Envoyer au serveur Render
+    fetch('https://cax-intranet-server.onrender.com/upload-avatar', {
         method: 'POST',
         body: formData
     })
@@ -180,7 +184,7 @@ function handleAvatarUpload(e) {
 function removeProfileAvatar() {
     const username = currentUsername;
     
-    fetch(`http://localhost:3000/delete-avatar/${username}`, {
+    fetch(`https://cax-intranet-server.onrender.com/delete-avatar/${username}`, {
         method: 'DELETE'
     })
     .then(response => response.json())
@@ -208,7 +212,7 @@ function removeProfileAvatar() {
 }
 
 // Save personal info
-function savePersonalInfo() {
+async function savePersonalInfo() {
     const updates = {
         bio: document.getElementById('biographyInput').value,
         location: document.getElementById('locationInput').value,
@@ -216,8 +220,8 @@ function savePersonalInfo() {
         phone: document.getElementById('phoneInput').value
     };
 
-    profileManager.updateProfile(currentUsername, updates);
-    currentProfile = profileManager.getProfile(currentUsername);
+    await profileManager.updateProfile(currentUsername, updates);
+    currentProfile = await profileManager.getProfile(currentUsername);
     
     showSuccess('Personal information saved');
     
@@ -231,7 +235,7 @@ function savePersonalInfo() {
 }
 
 // Add link
-function addLink() {
+async function addLink() {
     const title = document.getElementById('linkTitleInput').value.trim();
     const url = document.getElementById('linkUrlInput').value.trim();
 
@@ -250,8 +254,8 @@ function addLink() {
         return;
     }
 
-    profileManager.addLink(currentUsername, title, url);
-    currentProfile = profileManager.getProfile(currentUsername);
+    await profileManager.addLink(currentUsername, title, url);
+    currentProfile = await profileManager.getProfile(currentUsername);
 
     document.getElementById('linkTitleInput').value = '';
     document.getElementById('linkUrlInput').value = '';
@@ -262,9 +266,9 @@ function addLink() {
 }
 
 // Remove link
-function removeLink(index) {
-    profileManager.removeLink(currentUsername, index);
-    currentProfile = profileManager.getProfile(currentUsername);
+async function removeLink(index) {
+    await profileManager.removeLink(currentUsername, index);
+    currentProfile = await profileManager.getProfile(currentUsername);
     
     displayLinks();
     document.getElementById('linksCount').textContent = currentProfile.links.length;

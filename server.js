@@ -5,6 +5,30 @@ const fs = require('fs');
 const cors = require('cors');
 
 // In-memory database for messages (persists during server runtime)
+const profilesDB = {
+    profiles: {}, // { username: { links: [...], bio, avatar, ... } }
+    
+    getProfile(username) {
+        return this.profiles[username] || {
+            username: username,
+            links: [],
+            bio: '',
+            avatar: null,
+            phone: '',
+            address: ''
+        };
+    },
+
+    saveProfile(username, profileData) {
+        this.profiles[username] = {
+            username: username,
+            ...profileData,
+            updatedAt: new Date().toISOString()
+        };
+        return this.profiles[username];
+    }
+};
+
 const messagesDB = {
     messages: [],
     sendMessage(sender, receiver, content) {
@@ -202,4 +226,40 @@ app.get('/api/messages/unread/:username', (req, res) => {
         msg.receiver === username && !msg.read
     ).length;
     res.json({ success: true, unreadCount: unreadCount });
+});
+// ============================================
+// PROFILE ENDPOINTS
+// ============================================
+
+// Endpoint pour récupérer le profil d'un utilisateur
+app.get('/api/profile/:username', (req, res) => {
+    const { username } = req.params;
+    const profile = profilesDB.getProfile(username);
+    res.json({ success: true, profile: profile });
+});
+
+// Endpoint pour sauvegarder/mettre à jour le profil
+app.post('/api/profile/:username', (req, res) => {
+    const { username } = req.params;
+    const profileData = req.body;
+
+    if (!username) {
+        return res.status(400).json({ success: false, message: 'Username is required' });
+    }
+
+    const savedProfile = profilesDB.saveProfile(username, profileData);
+    res.json({ success: true, message: 'Profile saved successfully', profile: savedProfile });
+});
+
+// Endpoint pour mettre à jour (alias pour POST)
+app.put('/api/profile/:username', (req, res) => {
+    const { username } = req.params;
+    const profileData = req.body;
+
+    if (!username) {
+        return res.status(400).json({ success: false, message: 'Username is required' });
+    }
+
+    const savedProfile = profilesDB.saveProfile(username, profileData);
+    res.json({ success: true, message: 'Profile updated successfully', profile: savedProfile });
 });
