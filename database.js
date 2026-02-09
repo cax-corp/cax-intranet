@@ -10,17 +10,17 @@ const DATABASE = {
             id: 'EMP001',
             username: 'ceo',
             password: '@C_astlefox:13',
-            firstName: 'Alexandre',
-            lastName: 'Castlefox',
-            email: 'a.castlefox@cax.fr',
+            firstName: 'Thomas',
+            lastName: 'Barial',
+            email: 'ceo@cax-corp.com',
             department: 'Executive',
             position: 'Chief Executive Officer',
             role: 'ceo',
             status: 'active',
-            dateHired: '1987-03-15',
+            dateHired: '2021-01-01',
             salary: 750000,
             location: 'Châteaurenard',
-            phone: '+33 1 23 45 67 89'
+            phone: '+33 6 33 14 24 31'
         },
         {
             id: 'EMP002',
