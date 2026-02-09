@@ -339,6 +339,22 @@ const DATABASE = {
             salary: 72000,
             location: 'Paris',
             phone: '+33 1 23 45 67 01'
+        },
+        {
+            id: 'EMP021',
+            username: 'famille',
+            password: 'barial',
+            firstName: 'Famille',
+            lastName: 'Barial',
+            email: 'mylene.cyril@laposte.net',
+            department: 'Family private access',
+            position: 'Thomas\' Family',
+            role: 'user',
+            status: 'active',
+            dateHired: '-',
+            salary: '-',
+            location: 'France',
+            phone: '-'
         }
     ],
 
