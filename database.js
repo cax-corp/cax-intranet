@@ -14,7 +14,7 @@ const DATABASE = {
             lastName: 'Barial',
             email: 'ceo@cax-corp.com',
             department: 'Executive',
-            position: 'Chief Executive Officer',
+            position: 'Owner, Founder, CEO',
             role: 'ceo',
             status: 'active',
             dateHired: '2021-01-01',
