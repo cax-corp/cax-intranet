@@ -126,6 +126,4 @@ Envisagez:
 ## 📧 Support
 
 Pour toute question sur l'intranet, contactez votre administrateur système.
-
----
-
+'''
