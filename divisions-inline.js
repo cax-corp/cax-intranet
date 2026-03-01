@@ -69,6 +69,8 @@ function setupDivisionsEventListeners() {
     const cancelBtn = document.getElementById('cancelDivisionBtn');
     const exportCSVBtn = document.getElementById('exportDivisionsCSV');
     const exportJSONBtn = document.getElementById('exportDivisionsJSON');
+    const exportPDFBtn = document.getElementById('exportDivisionsPDF');
+    const exportTXTBtn = document.getElementById('exportDivisionsTXT');
     
     if (divisionForm) {
         divisionForm.addEventListener('submit', function(e) {
@@ -99,6 +101,14 @@ function setupDivisionsEventListeners() {
     
     if (exportJSONBtn) {
         exportJSONBtn.addEventListener('click', exportDivisionsJSON);
+    }
+    
+    if (exportPDFBtn) {
+        exportPDFBtn.addEventListener('click', exportDivisionsPDF);
+    }
+    
+    if (exportTXTBtn) {
+        exportTXTBtn.addEventListener('click', exportDivisionsTXT);
     }
 }
 
@@ -363,6 +373,129 @@ function downloadFile(content, filename, type) {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+}
+
+async function exportDivisionsTXT() {
+    try {
+        const response = await fetch(API_BASE);
+        const data = await response.json();
+        const divisions = data.divisions || [];
+        
+        if (divisions.length === 0) {
+            alert('No divisions to export');
+            return;
+        }
+        
+        let txt = '='.repeat(70) + '\n';
+        txt += 'CAX CORPORATION - DIVISIONS REPORT\n';
+        txt += '='.repeat(70) + '\n';
+        txt += `Generated: ${new Date().toLocaleString()}\n\n`;
+        
+        divisions.forEach((division, index) => {
+            txt += `-`.repeat(70) + '\n';
+            txt += `#${index + 1} - ${division.name}\n`;
+            txt += `-`.repeat(70) + '\n';
+            txt += `ID: ${division.id}\n`;
+            txt += `Location: ${division.location || 'N/A'}\n`;
+            txt += `Head: ${division.head || 'N/A'}\n`;
+            txt += `Employees: ${division.employees || 0}\n`;
+            txt += `Description: ${division.description || 'No description'}\n`;
+            txt += '\n';
+        });
+        
+        txt += '='.repeat(70) + '\n';
+        txt += `Total Divisions: ${divisions.length}\n`;
+        txt += `Total Employees: ${divisions.reduce((sum, d) => sum + (d.employees || 0), 0)}\n`;
+        txt += '='.repeat(70) + '\n';
+        
+        downloadFile(txt, 'divisions.txt', 'text/plain');
+    } catch (error) {
+        console.error('Error exporting TXT:', error);
+        alert('Error exporting divisions');
+    }
+}
+
+async function exportDivisionsPDF() {
+    try {
+        const response = await fetch(API_BASE);
+        const data = await response.json();
+        const divisions = data.divisions || [];
+        
+        if (divisions.length === 0) {
+            alert('No divisions to export');
+            return;
+        }
+        
+        // Create PDF content manually (simple text-based)
+        let pdfContent = generatePDFContent(divisions);
+        
+        // For a simple solution, we'll create a formatted HTML and let browser print to PDF
+        const printWindow = window.open('', '', 'height=600,width=800');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>CAX Corporation - Divisions Report</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
+                    h1 { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; }
+                    .division { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 4px; }
+                    .division h2 { margin: 0 0 10px 0; font-size: 18px; }
+                    .field { margin: 5px 0; }
+                    .label { font-weight: bold; display: inline-block; width: 120px; }
+                    .summary { margin-top: 30px; padding: 15px; background: #f5f5f5; border-radius: 4px; text-align: center; }
+                    @media print { body { margin: 10px; } }
+                </style>
+            </head>
+            <body>
+                <h1>CAX Corporation - Divisions Report</h1>
+                <p style="text-align: center; color: #666;">Generated: ${new Date().toLocaleString()}</p>
+        `);
+        
+        divisions.forEach((division, index) => {
+            printWindow.document.write(`
+                <div class="division">
+                    <h2>#${index + 1} - ${division.name}</h2>
+                    <div class="field"><span class="label">ID:</span> ${division.id}</div>
+                    <div class="field"><span class="label">Location:</span> ${division.location || 'N/A'}</div>
+                    <div class="field"><span class="label">Head:</span> ${division.head || 'N/A'}</div>
+                    <div class="field"><span class="label">Employees:</span> ${division.employees || 0}</div>
+                    <div class="field"><span class="label">Description:</span> ${division.description || 'No description'}</div>
+                </div>
+            `);
+        });
+        
+        const totalEmployees = divisions.reduce((sum, d) => sum + (d.employees || 0), 0);
+        printWindow.document.write(`
+                <div class="summary">
+                    <strong>Summary:</strong> ${divisions.length} divisions with ${totalEmployees} total employees
+                </div>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        
+        // Auto-trigger print dialog
+        setTimeout(() => {
+            printWindow.print();
+        }, 250);
+        
+    } catch (error) {
+        console.error('Error exporting PDF:', error);
+        alert('Error exporting divisions');
+    }
+}
+
+function generatePDFContent(divisions) {
+    // This is just a helper function - actual PDF generation happens in browser print
+    return divisions.map(d => ({
+        id: d.id,
+        name: d.name,
+        location: d.location,
+        head: d.head,
+        employees: d.employees,
+        description: d.description
+    }));
 }
 
 function showSuccessMessage(message) {
