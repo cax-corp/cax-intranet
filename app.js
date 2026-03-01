@@ -51,14 +51,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const sectionName = this.getAttribute('data-section');
                 const href = this.getAttribute('href');
                 
-                // Si c'est un lien vers une autre page (href non vide), naviguer normalement
-                if (href && href !== '#' && href !== 'index.html') {
+                // Si c'est un lien vers une autre page (contient .html ou /), naviguer normalement
+                if (href && href.includes('.html')) {
                     e.preventDefault();
                     window.location.href = href;
                     return;
                 }
                 
-                // Sinon, gérer comme une section
+                // Sinon, gérer comme une section (href commence par #)
                 e.preventDefault();
                 
                 // Retirer la classe active de tous les liens et sections
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Ajouter la classe active au lien et à la section cliqués
                 this.classList.add('active');
-                if (document.getElementById(sectionName)) {
+                if (sectionName && document.getElementById(sectionName)) {
                     document.getElementById(sectionName).classList.add('active');
                 }
             });
