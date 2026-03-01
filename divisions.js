@@ -1,7 +1,16 @@
 let currentDivisionId = null;
 
 document.addEventListener('DOMContentLoaded', function() {
-    checkAccessAndLoad();
+    try {
+        checkAccessAndLoad();
+    } catch (error) {
+        console.error('Error in checkAccessAndLoad:', error);
+        // Show access denied if there's any error
+        const accessDenied = document.getElementById('accessDenied');
+        const divisionsContent = document.getElementById('divisionsContent');
+        if (accessDenied) accessDenied.style.display = 'block';
+        if (divisionsContent) divisionsContent.style.display = 'none';
+    }
     
     const divisionForm = document.getElementById('divisionForm');
     if (divisionForm) {
@@ -23,22 +32,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function checkAccessAndLoad() {
     const currentUser = sessionStorage.getItem('username');
+    const accessDenied = document.getElementById('accessDenied');
+    const divisionsContent = document.getElementById('divisionsContent');
+    
+    // Verify DATABASE exists
+    if (typeof DATABASE === 'undefined' || !DATABASE.getActiveEmployees) {
+        console.error('DATABASE is not available');
+        if (accessDenied) accessDenied.style.display = 'block';
+        if (divisionsContent) divisionsContent.style.display = 'none';
+        return;
+    }
     
     let isCEO = false;
-    for (const user of DATABASE.getActiveEmployees()) {
-        if (user.username === currentUser && user.role === 'ceo') {
+    const employees = DATABASE.getActiveEmployees();
+    
+    for (const user of employees) {
+        if (user && user.username === currentUser && user.role === 'ceo') {
             isCEO = true;
             break;
         }
     }
 
     if (!isCEO) {
-        document.getElementById('accessDenied').style.display = 'block';
-        document.getElementById('divisionsContent').style.display = 'none';
+        if (accessDenied) accessDenied.style.display = 'block';
+        if (divisionsContent) divisionsContent.style.display = 'none';
         return;
     }
 
-    document.getElementById('divisionsContent').style.display = 'block';
+    if (divisionsContent) divisionsContent.style.display = 'block';
     loadDivisions();
 }
 
