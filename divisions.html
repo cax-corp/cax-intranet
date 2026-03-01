@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divisions - CAX Intranet</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="ressources/logo.svg">
+    <style>
+        .divisions-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .divisions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #000;
+            padding-bottom: 20px;
+        }
+
+        .divisions-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .btn-add-division {
+            background: #000;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 1px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .btn-add-division:hover {
+            background: #333;
+        }
+
+        .divisions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .division-card {
+            border: 1px solid #ccc;
+            border-radius: 1px;
+            padding: 20px;
+            background: #fff;
+            transition: all 0.2s;
+        }
+
+        .division-card:hover {
+            border-color: #000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .division-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+            color: #000;
+        }
+
+        .division-info {
+            font-size: 13px;
+            color: #666;
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        .division-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .btn-edit, .btn-delete {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #000;
+            background: #fff;
+            color: #000;
+            border-radius: 1px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-edit:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .btn-delete {
+            border-color: #d32f2f;
+            color: #d32f2f;
+        }
+
+        .btn-delete:hover {
+            background: #d32f2f;
+            color: #fff;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 1px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid #000;
+        }
+
+        .modal-content h2 {
+            margin: 0 0 20px 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #000;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 1px;
+            font-size: 13px;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            padding: 10px;
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 1px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .btn-submit:hover {
+            background: #333;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 10px;
+            background: #fff;
+            color: #000;
+            border: 1px solid #000;
+            border-radius: 1px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .btn-cancel:hover {
+            background: #f5f5f5;
+        }
+
+        .divisions-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            border-top: 1px solid #000;
+            padding-top: 20px;
+        }
+
+        .btn-export {
+            background: #000;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 1px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .btn-export:hover {
+            background: #333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state p {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .access-denied {
+            padding: 40px;
+            background: #fff;
+            border: 1px solid #d32f2f;
+            border-radius: 1px;
+            color: #d32f2f;
+            text-align: center;
+            max-width: 500px;
+            margin: 100px auto;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="ressources/logo.svg" alt="CAX" width="40" height="40" class="navbar-logo">
+            </div>
+            <div class="navbar-menu">
+                <a href="index.html" class="btn-back-dashboard">Back to Dashboard</a>
+                <a href="messages.html" class="btn-messages" style="padding: 8px 16px; background: #000; color: white; border: none; border-radius: 1px; cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-block;">Messages</a>
+                <div class="navbar-profile-container">
+                    <div id="profileDiv" class="navbar-profile"></div>
+                    <div id="profileMenu" class="profile-menu">
+                        <button id="profileLogout" class="profile-menu-item" type="button">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="divisions-container">
+        <div id="accessDenied" class="access-denied" style="display: none;">
+            <h2>Access Denied</h2>
+            <p>Only CEO can manage divisions.</p>
+            <p>Please contact your administrator.</p>
+        </div>
+
+        <div id="divisionsContent" style="display: none;">
+            <div class="divisions-header">
+                <h1>Company Divisions</h1>
+                <button class="btn-add-division" onclick="openAddModal()">+ Add Division</button>
+            </div>
+
+            <div id="divisionsGrid" class="divisions-grid"></div>
+
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <p>No divisions yet.</p>
+                <p>Create your first division to get started.</p>
+            </div>
+
+            <div class="divisions-actions">
+                <button class="btn-export" onclick="exportDivisions()">📥 Export as CSV</button>
+                <button class="btn-export" onclick="exportDivisionsJSON()">📥 Export as JSON</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Division Modal -->
+    <div id="divisionModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add Division</h2>
+            <form id="divisionForm">
+                <div class="form-group">
+                    <label for="divisionName">Division Name *</label>
+                    <input type="text" id="divisionName" required>
+                </div>
+                <div class="form-group">
+                    <label for="divisionLocation">Location</label>
+                    <input type="text" id="divisionLocation">
+                </div>
+                <div class="form-group">
+                    <label for="divisionHead">Division Head</label>
+                    <input type="text" id="divisionHead">
+                </div>
+                <div class="form-group">
+                    <label for="divisionEmployees">Number of Employees</label>
+                    <input type="number" id="divisionEmployees" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="divisionDescription">Description</label>
+                    <textarea id="divisionDescription"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-submit">Save Division</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <img src="ressources/logo.svg" alt="CAX" width="32" height="32" class="footer-logo">
+        <p>&copy; 2026 CAX Corporation - All rights reserved</p>
+    </footer>
+
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script src="profile-manager.js"></script>
+    <script src="app.js"></script>
+    <script src="divisions.js"></script>
+</body>
+</html>
