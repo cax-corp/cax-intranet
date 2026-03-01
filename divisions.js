@@ -11,11 +11,10 @@ document.getElementById('divisionForm').addEventListener('submit', function(e) {
 
 function checkAccessAndLoad() {
     const currentUser = sessionStorage.getItem('currentUser');
-    const ceoDepartment = 'Direction';
     
     let isCEO = false;
     for (const user of DATABASE.getActiveEmployees()) {
-        if (user.username === currentUser && user.department === ceoDepartment) {
+        if (user.username === currentUser && user.role === 'ceo') {
             isCEO = true;
             break;
         }
