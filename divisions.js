@@ -2,11 +2,23 @@ let currentDivisionId = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     checkAccessAndLoad();
-});
-
-document.getElementById('divisionForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    saveDivision();
+    
+    const divisionForm = document.getElementById('divisionForm');
+    if (divisionForm) {
+        divisionForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveDivision();
+        });
+    }
+    
+    const divisionModal = document.getElementById('divisionModal');
+    if (divisionModal) {
+        divisionModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    }
 });
 
 function checkAccessAndLoad() {
@@ -191,10 +203,3 @@ function downloadFile(content, filename, type) {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 }
-
-// Close modal when clicking outside
-document.getElementById('divisionModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeModal();
-    }
-});
