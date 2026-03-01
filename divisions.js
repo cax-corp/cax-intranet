@@ -10,7 +10,7 @@ document.getElementById('divisionForm').addEventListener('submit', function(e) {
 });
 
 function checkAccessAndLoad() {
-    const currentUser = sessionStorage.getItem('currentUser');
+    const currentUser = sessionStorage.getItem('username');
     
     let isCEO = false;
     for (const user of DATABASE.getActiveEmployees()) {
