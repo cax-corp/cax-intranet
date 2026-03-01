@@ -21,7 +21,7 @@ function checkDivisionsAccess() {
     const currentUser = sessionStorage.getItem('username');
     const divisionsLink = document.getElementById('divisionsNavLink');
     const addBtn = document.getElementById('addDivisionBtn');
-    const exportButtons = document.querySelectorAll('#exportDivisionsCSV, #exportDivisionsJSON');
+    const exportButtons = document.querySelectorAll('.btn-export, #exportDivisionsCSV, #exportDivisionsJSON, #exportDivisionsPDF, #exportDivisionsTXT');
     
     console.log('Checking divisions access for user:', currentUser);
     
@@ -44,13 +44,17 @@ function checkDivisionsAccess() {
     }
     
     console.log('User is CEO:', isCEO);
+    console.log('Export buttons found:', exportButtons.length);
     
     // Show divisions section only for CEO
     if (isCEO && divisionsLink) {
         console.log('Showing divisions section for CEO');
         divisionsLink.style.display = 'inline-block';
         if (addBtn) addBtn.style.display = 'block';
-        exportButtons.forEach(btn => btn.style.display = 'block');
+        exportButtons.forEach(btn => {
+            btn.style.display = 'block';
+            console.log('Showed button:', btn.id);
+        });
         
         // Setup event listeners
         setupDivisionsEventListeners();
