@@ -98,7 +98,6 @@ const messagesDB = {
 };
 
 const app = express();
-const PORT = 3000;
 
 // Créer le dossier des avatars s'il n'existe pas
 const avatarDir = path.join(__dirname, 'ressources', 'avatars');
@@ -177,12 +176,6 @@ app.delete('/delete-avatar/:username', (req, res) => {
             res.status(404).json({ success: false, message: 'Avatar non trouvé' });
         }
     });
-});
-
-// Démarrer le serveur
-app.listen(PORT, () => {
-    console.log(`Serveur CAX Intranet en cours d'exécution sur http://localhost:${PORT}`);
-    console.log(`Les avatars sont stockés dans: ${avatarDir}`);
 });
 
 // ============================================
