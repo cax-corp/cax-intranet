@@ -1,6 +1,12 @@
 // Divisions management for inline section in dashboard
 let currentDivisionId = null;
-const API_BASE = 'https://cax-intranet-server.onrender.com/api/divisions';
+
+// Dynamic API base - use local server for localhost, Render for production
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? `http://${window.location.hostname}:3000/api/divisions`
+    : 'https://cax-intranet-server.onrender.com/api/divisions';
+
+console.log('Using API endpoint:', API_BASE);
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -17,20 +23,31 @@ function checkDivisionsAccess() {
     const addBtn = document.getElementById('addDivisionBtn');
     const exportButtons = document.querySelectorAll('#exportDivisionsCSV, #exportDivisionsJSON');
     
+    console.log('Checking divisions access for user:', currentUser);
+    
     // Verify if user is CEO
     let isCEO = false;
     if (typeof DATABASE !== 'undefined' && DATABASE.getActiveEmployees) {
-        const employees = DATABASE.getActiveEmployees();
-        for (const user of employees) {
-            if (user && user.username === currentUser && user.role === 'ceo') {
-                isCEO = true;
-                break;
+        try {
+            const employees = DATABASE.getActiveEmployees();
+            for (const user of employees) {
+                if (user && user.username === currentUser && user.role === 'ceo') {
+                    isCEO = true;
+                    break;
+                }
             }
+        } catch (error) {
+            console.error('Error checking CEO status:', error);
         }
+    } else {
+        console.warn('DATABASE not available');
     }
+    
+    console.log('User is CEO:', isCEO);
     
     // Show divisions section only for CEO
     if (isCEO && divisionsLink) {
+        console.log('Showing divisions section for CEO');
         divisionsLink.style.display = 'inline-block';
         if (addBtn) addBtn.style.display = 'block';
         exportButtons.forEach(btn => btn.style.display = 'block');
@@ -40,6 +57,8 @@ function checkDivisionsAccess() {
         
         // Load divisions
         loadDivisions();
+    } else {
+        console.log('Hiding divisions section');
     }
 }
 
@@ -85,6 +104,7 @@ function setupDivisionsEventListeners() {
 
 async function loadDivisions() {
     try {
+        console.log('Loading divisions from:', API_BASE);
         const response = await fetch(`${API_BASE}`, {
             method: 'GET',
             headers: {
@@ -92,11 +112,15 @@ async function loadDivisions() {
             }
         });
         
+        console.log('Response status:', response.status);
+        
         if (!response.ok) {
             throw new Error(`Server error: ${response.status}`);
         }
         
         const data = await response.json();
+        console.log('Divisions data received:', data);
+        
         const divisions = data.divisions || [];
         
         displayDivisions(divisions);
@@ -105,7 +129,7 @@ async function loadDivisions() {
         // Fallback to showing message
         const grid = document.getElementById('divisionsGrid');
         if (grid) {
-            grid.innerHTML = '<p style="grid-column: 1/-1; color: #666;">Error loading divisions. Please try again.</p>';
+            grid.innerHTML = `<p style="grid-column: 1/-1; color: #666;">Error loading divisions: ${error.message}</p>`;
         }
     }
 }
