@@ -64,35 +64,45 @@ function checkAccessAndLoad() {
 }
 
 function loadDivisions() {
-    const divisions = DATABASE.getDivisions();
-    const grid = document.getElementById('divisionsGrid');
-    const emptyState = document.getElementById('emptyState');
+    try {
+        const divisions = DATABASE.getDivisions();
+        const grid = document.getElementById('divisionsGrid');
+        const emptyState = document.getElementById('emptyState');
 
-    grid.innerHTML = '';
+        if (!grid || !emptyState) {
+            console.error('Missing grid or emptyState element');
+            return;
+        }
 
-    if (divisions.length === 0) {
-        emptyState.style.display = 'block';
-        return;
+        grid.innerHTML = '';
+
+        if (divisions.length === 0) {
+            emptyState.style.display = 'block';
+            return;
+        }
+
+        emptyState.style.display = 'none';
+
+        divisions.forEach(division => {
+            const card = document.createElement('div');
+            card.className = 'division-card';
+            card.innerHTML = `
+                <h3 class="division-name">${division.name}</h3>
+                <div class="division-info"><strong>Location:</strong> ${division.location || 'N/A'}</div>
+                <div class="division-info"><strong>Head:</strong> ${division.head || 'N/A'}</div>
+                <div class="division-info"><strong>Employees:</strong> ${division.employees || 0}</div>
+                <div class="division-info"><strong>Description:</strong> ${division.description || 'No description'}</div>
+                <div class="division-actions">
+                    <button class="btn-edit" onclick="openEditModal(${division.id})">Edit</button>
+                    <button class="btn-delete" onclick="confirmDelete(${division.id})">Delete</button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+        console.log(`Loaded ${divisions.length} divisions`);
+    } catch (error) {
+        console.error('Error in loadDivisions:', error);
     }
-
-    emptyState.style.display = 'none';
-
-    divisions.forEach(division => {
-        const card = document.createElement('div');
-        card.className = 'division-card';
-        card.innerHTML = `
-            <h3 class="division-name">${division.name}</h3>
-            <div class="division-info"><strong>Location:</strong> ${division.location || 'N/A'}</div>
-            <div class="division-info"><strong>Head:</strong> ${division.head || 'N/A'}</div>
-            <div class="division-info"><strong>Employees:</strong> ${division.employees || 0}</div>
-            <div class="division-info"><strong>Description:</strong> ${division.description || 'No description'}</div>
-            <div class="division-actions">
-                <button class="btn-edit" onclick="openEditModal(${division.id})">Edit</button>
-                <button class="btn-delete" onclick="confirmDelete(${division.id})">Delete</button>
-            </div>
-        `;
-        grid.appendChild(card);
-    });
 }
 
 function openAddModal() {
@@ -144,14 +154,28 @@ function saveDivision() {
         description
     };
 
-    if (currentDivisionId === null) {
-        DATABASE.addDivision(divisionData);
-    } else {
-        DATABASE.updateDivision(currentDivisionId, divisionData);
+    try {
+        if (currentDivisionId === null) {
+            DATABASE.addDivision(divisionData);
+            console.log('Division added:', divisionData);
+        } else {
+            DATABASE.updateDivision(currentDivisionId, divisionData);
+            console.log('Division updated:', currentDivisionId);
+        }
+        
+        closeModal();
+        loadDivisions();
+        
+        // Show success message
+        const successMsg = document.createElement('div');
+        successMsg.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4caf50; color: white; padding: 15px 20px; border-radius: 4px; z-index: 2000; font-size: 14px;';
+        successMsg.textContent = 'Division saved successfully!';
+        document.body.appendChild(successMsg);
+        setTimeout(() => successMsg.remove(), 3000);
+    } catch (error) {
+        console.error('Error saving division:', error);
+        alert('Error saving division');
     }
-
-    closeModal();
-    loadDivisions();
 }
 
 function confirmDelete(id) {

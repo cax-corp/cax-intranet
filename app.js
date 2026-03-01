@@ -48,9 +48,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Gestion de la navigation entre les sections
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
                 const sectionName = this.getAttribute('data-section');
+                const href = this.getAttribute('href');
+                
+                // Si c'est un lien vers une autre page (href non vide), naviguer normalement
+                if (href && href !== '#' && href !== 'index.html') {
+                    e.preventDefault();
+                    window.location.href = href;
+                    return;
+                }
+                
+                // Sinon, gérer comme une section
+                e.preventDefault();
                 
                 // Retirer la classe active de tous les liens et sections
                 navLinks.forEach(l => l.classList.remove('active'));
