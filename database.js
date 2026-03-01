@@ -513,5 +513,72 @@ const DATABASE = {
             }
         });
         return count;
+    },
+
+    // Divisions Storage
+    divisions: [
+        {
+            id: 1,
+            name: 'Orbitals',
+            location: 'Châteaurenard',
+            head: 'Thomas Barial',
+            employees: 250,
+            description: 'Main division handling core business operations'
+        },
+        {
+            id: 2,
+            name: 'Socialys',
+            location: 'London',
+            head: 'Sarah Mitchell',
+            employees: 180,
+            description: 'European subsidiary focused on social media solutions'
+        },
+        {
+            id: 3,
+            name: 'Anoki',
+            location: 'New York',
+            head: 'Robert Johnson',
+            employees: 150,
+            description: 'American division specializing in analytics and data'
+        }
+    ],
+
+    // Fonction pour obtenir toutes les divisions
+    getDivisions() {
+        return this.divisions.sort((a, b) => a.name.localeCompare(b.name));
+    },
+
+    // Fonction pour ajouter une division
+    addDivision(division) {
+        const newDivision = {
+            id: this.divisions.length > 0 ? Math.max(...this.divisions.map(d => d.id)) + 1 : 1,
+            name: division.name,
+            location: division.location || '',
+            head: division.head || '',
+            employees: division.employees || 0,
+            description: division.description || ''
+        };
+        this.divisions.push(newDivision);
+        return newDivision;
+    },
+
+    // Fonction pour mettre à jour une division
+    updateDivision(id, updates) {
+        const division = this.divisions.find(d => d.id === id);
+        if (division) {
+            Object.assign(division, updates);
+            return { success: true, division: division };
+        }
+        return { success: false, message: 'Division not found' };
+    },
+
+    // Fonction pour supprimer une division
+    deleteDivision(id) {
+        const index = this.divisions.findIndex(d => d.id === id);
+        if (index !== -1) {
+            this.divisions.splice(index, 1);
+            return { success: true, message: 'Division deleted successfully' };
+        }
+        return { success: false, message: 'Division not found' };
     }
 };
