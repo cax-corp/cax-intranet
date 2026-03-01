@@ -97,6 +97,66 @@ const messagesDB = {
     }
 };
 
+const divisionsDB = {
+    divisions: [
+        {
+            id: 1,
+            name: 'Orbitals',
+            location: 'France',
+            head: 'Jean Dupont',
+            employees: 250,
+            description: 'Orbital ring and space infrastructure division'
+        },
+        {
+            id: 2,
+            name: 'Socialys',
+            location: 'UK',
+            head: 'Jane Smith',
+            employees: 180,
+            description: 'Social media and digital platforms'
+        },
+        {
+            id: 3,
+            name: 'Anoki',
+            location: 'USA',
+            head: 'Robert Johnson',
+            employees: 150,
+            description: 'American division specializing in analytics and data'
+        }
+    ],
+    
+    getDivisions() {
+        return this.divisions.sort((a, b) => a.name.localeCompare(b.name));
+    },
+    
+    addDivision(division) {
+        const newDivision = {
+            id: this.divisions.length > 0 ? Math.max(...this.divisions.map(d => d.id)) + 1 : 1,
+            ...division
+        };
+        this.divisions.push(newDivision);
+        return newDivision;
+    },
+    
+    updateDivision(id, updates) {
+        const division = this.divisions.find(d => d.id === id);
+        if (division) {
+            Object.assign(division, updates);
+            return division;
+        }
+        return null;
+    },
+    
+    deleteDivision(id) {
+        const index = this.divisions.findIndex(d => d.id === id);
+        if (index !== -1) {
+            this.divisions.splice(index, 1);
+            return true;
+        }
+        return false;
+    }
+};
+
 const app = express();
 
 // Créer le dossier des avatars s'il n'existe pas
@@ -255,6 +315,67 @@ app.put('/api/profile/:username', (req, res) => {
 
     const savedProfile = profilesDB.saveProfile(username, profileData);
     res.json({ success: true, message: 'Profile updated successfully', profile: savedProfile });
+});
+
+// ============================================
+// DIVISIONS ENDPOINTS
+// ============================================
+
+// Get all divisions
+app.get('/api/divisions', (req, res) => {
+    const divisions = divisionsDB.getDivisions();
+    res.json({ success: true, divisions: divisions });
+});
+
+// Add new division
+app.post('/api/divisions', (req, res) => {
+    const { name, location, head, employees, description } = req.body;
+    
+    if (!name) {
+        return res.status(400).json({ success: false, message: 'Division name is required' });
+    }
+    
+    const newDivision = divisionsDB.addDivision({
+        name: name,
+        location: location || '',
+        head: head || '',
+        employees: parseInt(employees) || 0,
+        description: description || ''
+    });
+    
+    res.json({ success: true, division: newDivision });
+});
+
+// Update division
+app.put('/api/divisions/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const { name, location, head, employees, description } = req.body;
+    
+    const updated = divisionsDB.updateDivision(id, {
+        name: name,
+        location: location || '',
+        head: head || '',
+        employees: parseInt(employees) || 0,
+        description: description || ''
+    });
+    
+    if (!updated) {
+        return res.status(404).json({ success: false, message: 'Division not found' });
+    }
+    
+    res.json({ success: true, division: updated });
+});
+
+// Delete division
+app.delete('/api/divisions/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const deleted = divisionsDB.deleteDivision(id);
+    
+    if (!deleted) {
+        return res.status(404).json({ success: false, message: 'Division not found' });
+    }
+    
+    res.json({ success: true, message: 'Division deleted' });
 });
 
 // 404 Handler

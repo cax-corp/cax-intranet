@@ -2150,3 +2150,72 @@ body {
         padding: 8px 10px;
     }
 }
+
+/* DIVISIONS SECTION STYLES */
+
+.divisions-grid {
+    margin-bottom: 20px;
+}
+
+.division-card {
+    border: 1px solid #ccc;
+    border-radius: 1px;
+    padding: 20px;
+    background: #fff;
+    transition: all 0.2s;
+}
+
+.division-card:hover {
+    border-color: #000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.division-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: #000;
+}
+
+.division-info {
+    font-size: 13px;
+    color: #666;
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.division-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.btn-edit, .btn-delete {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+    border-radius: 1px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-edit:hover {
+    background: #000;
+    color: #fff;
+}
+
+.btn-delete {
+    border-color: #d32f2f;
+    color: #d32f2f;
+}
+
+.btn-delete:hover {
+    background: #d32f2f;
+    color: #fff;
+}

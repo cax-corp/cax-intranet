@@ -18,7 +18,7 @@
                 <a href="#documents" class="nav-link" data-section="documents">Documents</a>
                 <a href="#annonces" class="nav-link" data-section="annonces">Annoncements</a>
                 <a href="#equipe" class="nav-link" data-section="equipe">Team</a>
-                <a href="divisions.html" class="nav-link" data-section="divisions">Divisions</a>
+                <a href="#divisions" class="nav-link" data-section="divisions" id="divisionsNavLink" style="display: none;">Divisions</a>
                 <a href="messages.html" class="btn-messages" style="padding: 8px 16px; background: #000; color: white; border: none; border-radius: 1px; cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-block;">Messages</a>
                 <div class="navbar-profile-container">
                     <div id="profileDiv" class="navbar-profile"></div>
@@ -150,9 +150,57 @@
                 </div>
             </div>
         </section>
+
+        <!-- Section Divisions (CEO Only) -->
+        <section id="divisions" class="section" style="display: none;">
+            <div class="section-header">
+                <h2>Company Divisions</h2>
+                <button class="btn-add-division" id="addDivisionBtn" style="display: none; background: #000; color: #fff; padding: 10px 20px; border: none; border-radius: 1px; cursor: pointer; font-size: 14px; font-weight: 500;">+ Add Division</button>
+            </div>
+            <div id="divisionsGrid" class="divisions-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;"></div>
+            <div id="emptyState" class="empty-state" style="display: none; text-align: center; padding: 60px 20px; color: #666;">
+                <p>No divisions yet.</p>
+                <p>Create your first division to get started.</p>
+            </div>
+            <div class="divisions-actions" style="display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid #000; padding-top: 20px;">
+                <button class="btn-export" id="exportDivisionsCSV" style="display: none; background: #000; color: #fff; padding: 10px 20px; border: none; border-radius: 1px; cursor: pointer; font-size: 13px; font-weight: 500;">📥 Export as CSV</button>
+                <button class="btn-export" id="exportDivisionsJSON" style="display: none; background: #000; color: #fff; padding: 10px 20px; border: none; border-radius: 1px; cursor: pointer; font-size: 13px; font-weight: 500;">📥 Export as JSON</button>
+            </div>
+        </section>
     </div>
 
-    <footer class="footer">
+    <!-- Add/Edit Division Modal -->
+    <div id="divisionModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: #fff; padding: 30px; border-radius: 1px; max-width: 500px; width: 90%; border: 1px solid #000;">
+            <h2 id="modalTitle" style="margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Add Division</h2>
+            <form id="divisionForm">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="divisionName" style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px; color: #000;">Division Name *</label>
+                    <input type="text" id="divisionName" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 1px; font-size: 13px; font-family: inherit; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="divisionLocation" style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px; color: #000;">Location</label>
+                    <input type="text" id="divisionLocation" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 1px; font-size: 13px; font-family: inherit; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="divisionHead" style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px; color: #000;">Division Head</label>
+                    <input type="text" id="divisionHead" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 1px; font-size: 13px; font-family: inherit; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="divisionEmployees" style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px; color: #000;">Number of Employees</label>
+                    <input type="number" id="divisionEmployees" min="0" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 1px; font-size: 13px; font-family: inherit; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="divisionDescription" style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px; color: #000;">Description</label>
+                    <textarea id="divisionDescription" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 1px; font-size: 13px; font-family: inherit; box-sizing: border-box; resize: vertical; min-height: 80px;"></textarea>
+                </div>
+                <div class="modal-actions" style="display: flex; gap: 10px; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+                    <button type="submit" class="btn-submit" style="flex: 1; padding: 10px; background: #000; color: #fff; border: none; border-radius: 1px; cursor: pointer; font-weight: 500; font-size: 13px;">Save Division</button>
+                    <button type="button" class="btn-cancel" id="cancelDivisionBtn" style="flex: 1; padding: 10px; background: #fff; color: #000; border: 1px solid #000; border-radius: 1px; cursor: pointer; font-weight: 500; font-size: 13px;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
         <img src="ressources/logo.svg" alt="CAX" width="32" height="32" class="footer-logo">
         <p>&copy; 2026 CAX Corporation - All rights reserved</p>
     </footer>
@@ -162,6 +210,7 @@
     <script src="profile-manager.js"></script>
     <script src="app.js"></script>
     <script src="dashboard.js"></script>
+    <script src="divisions-inline.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Navigation vers Statistics depuis Dashboard card
