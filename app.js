@@ -83,20 +83,29 @@ document.addEventListener('DOMContentLoaded', () => {
         if (username) {
             const isCEO = auth.isCEO && auth.isCEO();
             
-            // Get user profile for avatar
+            // Get user profile for avatar (asynchrone)
             let profileHTML = '';
             if (typeof profileManager !== 'undefined') {
-                const userProfile = profileManager.getProfile(username);
-                if (userProfile && userProfile.avatar) {
-                    profileHTML += `<img src="${userProfile.avatar}" alt="Avatar" class="navbar-avatar">`;
-                }
+                profileManager.getProfile(username).then(userProfile => {
+                    if (userProfile && userProfile.avatar) {
+                        profileHTML = `<img src="${userProfile.avatar}" alt="Avatar" class="navbar-avatar">`;
+                    }
+                    // Add username text
+                    const displayText = isCEO ? `${username} (CEO)` : username;
+                    profileHTML += `<span class="navbar-username">${displayText}</span>`;
+                    profileDiv.innerHTML = profileHTML;
+                }).catch(error => {
+                    console.error('Error loading profile:', error);
+                    // Add username text as fallback
+                    const displayText = isCEO ? `${username} (CEO)` : username;
+                    profileDiv.innerHTML = `<span class="navbar-username">${displayText}</span>`;
+                });
+            } else {
+                // Add username text if profileManager not available
+                const displayText = isCEO ? `${username} (CEO)` : username;
+                profileHTML = `<span class="navbar-username">${displayText}</span>`;
+                profileDiv.innerHTML = profileHTML;
             }
-            
-            // Add username text
-            const displayText = isCEO ? `${username} (CEO)` : username;
-            profileHTML += `<span class="navbar-username">${displayText}</span>`;
-            
-            profileDiv.innerHTML = profileHTML;
         }
     }
 
