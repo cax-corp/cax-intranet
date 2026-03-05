@@ -1,6 +1,40 @@
 // Tout initialiser dans DOMContentLoaded pour éviter les conflits de timing
 document.addEventListener('DOMContentLoaded', () => {
     
+    // Helper functions for loaders
+    window.getRandomDelay = function() {
+        return Math.random() * 700 + 800; // 800-1500ms
+    };
+    
+    window.simulateDelay = async function() {
+        return new Promise(resolve => setTimeout(resolve, getRandomDelay()));
+    };
+    
+    window.showLoginLoader = function(message = 'Connexion...') {
+        let loader = document.getElementById('loginLoader');
+        if (!loader) {
+            loader = document.createElement('div');
+            loader.id = 'loginLoader';
+            loader.innerHTML = `
+                <div class="loader-overlay">
+                    <div class="loader-spinner">
+                        <div class="loader-circle"></div>
+                        <p>${message}</p>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(loader);
+        }
+        loader.style.display = 'flex';
+    };
+    
+    window.hideLoginLoader = function() {
+        const loader = document.getElementById('loginLoader');
+        if (loader) {
+            loader.style.display = 'none';
+        }
+    };
+    
     // GESTION DE LA PAGE DE CONNEXION
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
@@ -9,23 +43,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const errorMessage = document.getElementById('errorMessage');
         const successMessage = document.getElementById('successMessage');
 
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            showLoginLoader('Vérification des identifiants...');
+            
+            // Simulate network delay
+            await simulateDelay();
             
             const username = usernameInput.value.trim();
             const password = passwordInput.value;
 
             // Vérifier le nom d'utilisateur et le mot de passe
             if (auth.login(username, password)) {
+                showLoginLoader('Connexion réussie...');
+                
                 // Afficher le message de succès
                 successMessage.textContent = 'Connexion réussie ! Redirection en cours...';
                 successMessage.classList.add('show');
 
-                // Rediriger vers l'intranet après 1.2 secondes
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1200);
+                // Attendre un peu avant de rediriger
+                await simulateDelay();
+                
+                // Rediriger vers l'intranet
+                window.location.href = 'index.html';
             } else {
+                hideLoginLoader();
+                
                 // Afficher le message d'erreur
                 errorMessage.textContent = 'Identifiant ou mot de passe incorrect. Veuillez réessayer.';
                 errorMessage.classList.add('show');
