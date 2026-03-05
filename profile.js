@@ -13,7 +13,7 @@ async function simulateDelay() {
 }
 
 // Loading spinner management for profile
-function showProfileLoader(message = 'Chargement...') {
+function showProfileLoader(message = 'Loading...') {
     let loader = document.getElementById('profileLoader');
     if (!loader) {
         loader = document.createElement('div');
@@ -57,7 +57,7 @@ async function loadProfileData() {
     if (!currentUsername) return;
 
     try {
-        showProfileLoader('Chargement du profil...');
+        showProfileLoader('Loading profile...');
         
         const profile = await profileManager.getProfile(currentUsername);
         
@@ -111,7 +111,7 @@ async function loadProfileData() {
         displayLinks();
         hideProfileLoader();
     } catch (error) {
-        console.error('Erreur lors du chargement du profil:', error);
+        console.error('Error loading profile:', error);
         hideProfileLoader();
     }
 }
@@ -167,25 +167,25 @@ function handleAvatarUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Vérifier le type de fichier
+    // Check file type
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
-        showError('Type de fichier non autorisé. Utilisez JPG, PNG, GIF ou WebP.');
+        showError('File type not allowed. Use JPG, PNG, GIF or WebP.');
         return;
     }
 
-    // Vérifier la taille (5MB max)
+    // Check file size (5MB max)
     if (file.size > 5 * 1024 * 1024) {
-        showError('Le fichier est trop volumineux (max 5MB).');
+        showError('File is too large (max 5MB).');
         return;
     }
 
-    // Créer un FormData pour l'upload
+    // Create FormData for upload
     const formData = new FormData();
     formData.append('avatar', file);
     formData.append('username', currentUsername);
 
-    // Afficher un loading
+    // Show loading
     const uploadBtn = document.querySelector('.btn-upload-avatar');
     const originalText = uploadBtn.textContent;
     uploadBtn.textContent = 'Uploading...';
@@ -199,23 +199,23 @@ function handleAvatarUpload(e) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Sauvegarder le chemin de l'avatar
+            // Save avatar path
             profileManager.setAvatar(currentUsername, data.avatarPath);
             currentProfile.avatar = data.avatarPath;
             
-            // Afficher l'avatar
+            // Display avatar
             const avatarImg = document.getElementById('profileAvatarDisplay');
             avatarImg.src = data.avatarPath;
             avatarImg.classList.remove('empty');
             document.getElementById('removeAvatarBtn').style.display = 'block';
             
-            showSuccess('Photo de profil uploadée avec succès !');
+            showSuccess('Profile photo uploaded successfully!');
         } else {
-            showError(data.message || 'Erreur lors de l\'upload');
+            showError(data.message || 'Error uploading file');
         }
     })
     .catch(error => {
-        showError('Erreur de connexion au serveur: ' + error.message);
+        showError('Server connection error: ' + error.message);
     })
     .finally(() => {
         uploadBtn.textContent = originalText;
@@ -242,13 +242,13 @@ function removeProfileAvatar() {
             avatarImg.classList.add('empty');
             document.getElementById('removeAvatarBtn').style.display = 'none';
             
-            showSuccess('Photo de profil supprimée');
+            showSuccess('Profile photo deleted');
         } else {
-            showError(data.message || 'Erreur lors de la suppression');
+            showError(data.message || 'Error deleting avatar');
         }
     })
     .catch(error => {
-        showError('Erreur de connexion au serveur: ' + error.message);
+        showError('Server connection error: ' + error.message);
     })
     .finally(() => {
         document.getElementById('avatarInput').value = '';

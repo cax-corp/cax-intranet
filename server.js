@@ -159,13 +159,13 @@ const divisionsDB = {
 
 const app = express();
 
-// Créer le dossier des avatars s'il n'existe pas
+// Create avatar folder if it doesn't exist
 const avatarDir = path.join(__dirname, 'ressources', 'avatars');
 if (!fs.existsSync(avatarDir)) {
     fs.mkdirSync(avatarDir, { recursive: true });
 }
 
-// Configuration multer pour les uploads
+// Configure multer for uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, avatarDir);
@@ -186,7 +186,7 @@ const upload = multer({
         if (allowedTypes.includes(file.mimetype)) {
             cb(null, true);
         } else {
-            cb(new Error('Type de fichier non autorisé'), false);
+            cb(new Error('File type not allowed'), false);
         }
     }
 });
@@ -196,30 +196,30 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.static(__dirname));
 
-// Route pour uploader un avatar
+// Route to upload an avatar
 app.post('/upload-avatar', upload.single('avatar'), (req, res) => {
     if (!req.file) {
-        return res.status(400).json({ success: false, message: 'Aucun fichier uploadé' });
+        return res.status(400).json({ success: false, message: 'No file uploaded' });
     }
 
     const avatarPath = `/ressources/avatars/${req.file.filename}`;
     res.json({
         success: true,
-        message: 'Avatar uploadé avec succès',
+        message: 'Avatar uploaded successfully',
         avatarPath: avatarPath,
         filename: req.file.filename
     });
 });
 
-// Route pour supprimer un avatar
+// Route to delete an avatar
 app.delete('/delete-avatar/:username', (req, res) => {
     const username = req.params.username;
     const avatarDir = path.join(__dirname, 'ressources', 'avatars');
     
-    // Chercher les fichiers de cet utilisateur
+    // Find this user's files
     fs.readdir(avatarDir, (err, files) => {
         if (err) {
-            return res.status(500).json({ success: false, message: 'Erreur lors de la suppression' });
+            return res.status(500).json({ success: false, message: 'Error deleting avatar' });
         }
 
         let deleted = false;
@@ -231,9 +231,9 @@ app.delete('/delete-avatar/:username', (req, res) => {
         });
 
         if (deleted) {
-            res.json({ success: true, message: 'Avatar supprimé' });
+            res.json({ success: true, message: 'Avatar deleted' });
         } else {
-            res.status(404).json({ success: false, message: 'Avatar non trouvé' });
+            res.status(404).json({ success: false, message: 'Avatar not found' });
         }
     });
 });
@@ -242,7 +242,7 @@ app.delete('/delete-avatar/:username', (req, res) => {
 // MESSAGE ENDPOINTS
 // ============================================
 
-// Endpoint pour envoyer un message
+// Endpoint to send a message
 app.post('/api/messages/send', (req, res) => {
     const { sender, receiver, content } = req.body;
 
@@ -254,7 +254,7 @@ app.post('/api/messages/send', (req, res) => {
     res.json({ success: true, message: message });
 });
 
-// Endpoint pour obtenir la conversation entre deux utilisateurs
+// Endpoint to get conversation between two users
 app.get('/api/messages/conversation/:user1/:user2', (req, res) => {
     const { user1, user2 } = req.params;
     const conversation = messagesDB.getConversation(user1, user2);
@@ -265,14 +265,14 @@ app.get('/api/messages/conversation/:user1/:user2', (req, res) => {
     res.json({ success: true, messages: conversation });
 });
 
-// Endpoint pour obtenir toutes les conversations d'un utilisateur
+// Endpoint to get all conversations for a user
 app.get('/api/messages/conversations/:username', (req, res) => {
     const { username } = req.params;
     const conversations = messagesDB.getConversations(username);
     res.json({ success: true, conversations: conversations });
 });
 
-// Endpoint pour obtenir les unread messages count
+// Endpoint to get unread messages count
 app.get('/api/messages/unread/:username', (req, res) => {
     const { username } = req.params;
     const unreadCount = messagesDB.messages.filter(msg => 
@@ -284,14 +284,14 @@ app.get('/api/messages/unread/:username', (req, res) => {
 // PROFILE ENDPOINTS
 // ============================================
 
-// Endpoint pour récupérer le profil d'un utilisateur
+// Endpoint to get user profile
 app.get('/api/profile/:username', (req, res) => {
     const { username } = req.params;
     const profile = profilesDB.getProfile(username);
     res.json({ success: true, profile: profile });
 });
 
-// Endpoint pour sauvegarder/mettre à jour le profil
+// Endpoint to save/update user profile
 app.post('/api/profile/:username', (req, res) => {
     const { username } = req.params;
     const profileData = req.body;
@@ -304,7 +304,7 @@ app.post('/api/profile/:username', (req, res) => {
     res.json({ success: true, message: 'Profile saved successfully', profile: savedProfile });
 });
 
-// Endpoint pour mettre à jour (alias pour POST)
+// Endpoint to update (alias for POST)
 app.put('/api/profile/:username', (req, res) => {
     const { username } = req.params;
     const profileData = req.body;

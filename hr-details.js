@@ -1,9 +1,9 @@
-// Vérifier l'authentification
+// Check authentication
 if (!auth.isAuthenticated()) {
     window.location.href = 'login.html';
 }
 
-// Base de données des employés
+// Employee database
 const employees = [
     {
         id: 1,

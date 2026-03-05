@@ -1,4 +1,4 @@
-// Vérifier l'authentification et que c'est un CEO
+// Check authentication and that it's a CEO
 if (!auth.isAuthenticated()) {
     window.location.href = 'login.html';
 }
@@ -18,7 +18,7 @@ async function simulateDelay() {
 }
 
 // Loading spinner management for users
-function showUsersLoader(message = 'Chargement...') {
+function showUsersLoader(message = 'Loading...') {
     let loader = document.getElementById('usersLoader');
     if (!loader) {
         loader = document.createElement('div');
@@ -43,14 +43,14 @@ function hideUsersLoader() {
     }
 }
 
-// Initialiser la page
+// Initialize the page
 document.addEventListener('DOMContentLoaded', () => {
     displayCreatedUsers();
     setupFormHandler();
     setupProfileMenu();
 });
 
-// Setup menu profil
+// Setup profile menu
 function setupProfileMenu() {
     const logoutBtn = document.getElementById('profileLogout');
     if (logoutBtn) {
@@ -69,7 +69,7 @@ function setupProfileMenu() {
     });
 }
 
-// Setup du formulaire de création
+// Setup creation form
 function setupFormHandler() {
     const form = document.getElementById('createUserForm');
     form.addEventListener('submit', (e) => {
@@ -78,7 +78,7 @@ function setupFormHandler() {
     });
 }
 
-// Créer un nouvel utilisateur
+// Create a new user
 function createNewUser() {
     const username = document.getElementById('newUsername').value.trim();
     const password = document.getElementById('newPassword').value;
@@ -90,7 +90,7 @@ function createNewUser() {
         return;
     }
 
-    showUsersLoader('Création de l\'utilisateur...');
+    showUsersLoader('Creating user...');
     
     // Simulate network delay
     setTimeout(() => {
@@ -110,9 +110,9 @@ function createNewUser() {
     }, getRandomDelay());
 }
 
-// Afficher les utilisateurs créés
+// Display created users
 function displayCreatedUsers() {
-    showUsersLoader('Chargement des utilisateurs...');
+    showUsersLoader('Loading users...');
     
     const tbody = document.getElementById('usersTableBody');
     const createdUsers = auth.getCreatedUsers();
@@ -120,7 +120,7 @@ function displayCreatedUsers() {
 
     // Simulate network delay
     setTimeout(() => {
-        // Afficher tous les employés de la base de données
+        // Display all database employees
         tbody.innerHTML = allEmployees.map(emp => `
             <tr>
                 <td><strong>${emp.firstName} ${emp.lastName}</strong></td>
@@ -135,7 +135,7 @@ function displayCreatedUsers() {
     }, getRandomDelay());
 }
 
-// Afficher les messages
+// Display messages
 function showMessage(element, message, type) {
     element.textContent = message;
     element.className = `form-message show ${type}`;

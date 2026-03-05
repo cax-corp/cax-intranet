@@ -19,7 +19,7 @@ async function simulateDelay() {
 }
 
 // Loading spinner management
-function showLoader(message = 'Chargement...') {
+function showLoader(message = 'Loading...') {
     let loader = document.getElementById('divisionsLoader');
     if (!loader) {
         loader = document.createElement('div');
@@ -154,7 +154,7 @@ function setupDivisionsEventListeners() {
 
 async function loadDivisions() {
     try {
-        showLoader('Chargement des divisions...');
+        showLoader('Loading divisions...');
         console.log('Loading divisions from:', API_BASE);
         const response = await fetch(`${API_BASE}`, {
             method: 'GET',
@@ -260,7 +260,7 @@ function closeModal() {
 }
 
 async function saveDivision() {
-    showLoader('Sauvegarde de la division...');
+    showLoader('Saving division...');
     const name = document.getElementById('divisionName').value.trim();
     const location = document.getElementById('divisionLocation').value.trim();
     const head = document.getElementById('divisionHead').value.trim();
@@ -340,7 +340,7 @@ function confirmDelete(id) {
 
 async function deleteDivision(id) {
     try {
-        showLoader('Suppression de la division...');
+        showLoader('Deleting division...');
         const response = await fetch(`${API_BASE}/${id}`, {
             method: 'DELETE',
             headers: {

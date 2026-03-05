@@ -1,129 +1,129 @@
-# Intranet CAX - Protégé par mot de passe
+# CAX Intranet - Password Protected
 
-Un intranet moderne et sécurisé avec authentification par mot de passe.
+A modern and secure intranet with password authentication.
 
-## 📋 Structure des fichiers
+## 📋 File Structure
 
 ```text
 CAX Intranet/
-├── login.html          # Page de connexion
-├── index.html          # Intranet principal
-├── styles.css          # Feuilles de style
-├── auth.js             # Gestion de l'authentification
-├── app.js              # Logique de l'application
-├── config.txt          # Configuration du mot de passe
-└── README.md           # Ce fichier
+├── login.html          # Login page
+├── index.html          # Main intranet
+├── styles.css          # Stylesheets
+├── auth.js             # Authentication management
+├── app.js              # Application logic
+├── config.txt          # Password configuration
+└── README.md           # This file
 ```
 
-## 🔐 Accès et sécurité
+## 🔐 Access and Security
 
-### Mot de passe par défaut
+### Default Password
 
-**Mot de passe:** `intranet2026`
+**Password:** `intranet2026`
 
-> ⚠️ **IMPORTANT**: Modifiez le mot de passe immédiatement après le premier accès!
+> ⚠️ **IMPORTANT**: Change the password immediately after first access!
 
-### Comment changer le mot de passe
+### How to Change the Password
 
-1. Ouvrez le fichier `auth.js`
-2. Localisez la ligne: `PASSWORD: 'intranet2026',`
-3. Remplacez `intranet2026` par votre nouveau mot de passe
-4. Sauvegardez le fichier
+1. Open the `auth.js` file
+2. Find the line: `PASSWORD: 'intranet2026',`
+3. Replace `intranet2026` with your new password
+4. Save the file
 
-### Fonctionnalités de sécurité
+### Security Features
 
-- ✅ **Authentification obligatoire** - Accès protégé à tous les contenus
-- ✅ **Session de 1 heure** - Déconnexion automatique après inactivité
-- ✅ **Stockage sécurisé** - Utilisation de sessionStorage (vidé à la fermeture du navigateur)
-- ✅ **Redirection automatique** - Toute tentative d'accès direct sans authentification redirige vers la connexion
+- ✅ **Required Authentication** - Protected access to all content
+- ✅ **1-Hour Session** - Automatic logout after inactivity
+- ✅ **Secure Storage** - Uses sessionStorage (cleared on browser close)
+- ✅ **Automatic Redirect** - Any unauthorized access redirects to login
 
-## 🚀 Utilisation
+## 🚀 Usage
 
-### Démarrage
+### Getting Started
 
-1. Ouvrez `login.html` dans votre navigateur (ou double-cliquez sur le fichier)
-2. Entrez le mot de passe: `intranet2026`
-3. Cliquez sur "Connexion"
+1. Open `login.html` in your browser (or double-click the file)
+2. Enter the password: `intranet2026`
+3. Click "Login"
 
 ### Navigation
 
-Une fois connecté, vous pouvez naviguer entre:
+Once logged in, you can navigate between:
 
-- **Tableau de bord** - Vue d'ensemble et statistiques
-- **Documents** - Ressources et fichiers téléchargeables
-- **Annonces** - Communications importantes
-- **Équipe** - Annuaire et départements
+- **Dashboard** - Overview and statistics
+- **Documents** - Resources and downloadable files
+- **Announcements** - Important communications
+- **Team** - Directory and departments
 
-### Déconnexion
+### Logout
 
-Cliquez sur le bouton "Déconnexion" en haut à droite
+Click the "Logout" button in the top right corner
 
-## 📱 Responsive design
+## 📱 Responsive Design
 
-L'intranet s'adapte automatiquement à:
+The intranet automatically adapts to:
 
-- 💻 Ordinateur de bureau
-- 📱 Tablettes
+- 💻 Desktop computers
+- 📱 Tablets
 - 📞 Smartphones
 
-## 🎨 Personnalisation
+## 🎨 Customization
 
-### Couleurs
+### Colors
 
-Modifiez les gradients dans `styles.css`:
+Modify the gradients in `styles.css`:
 
 ```css
 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 ```
 
-### Contenu
+### Content
 
-Éditez directement les sections HTML dans `index.html`:
+Edit HTML sections directly in `index.html`:
 
-- Cartes du tableau de bord
-- Annonces
+- Dashboard cards
+- Announcements
 - Documents
-- Équipes
+- Teams
 
-### Timeouts de session
+### Session Timeouts
 
-Dans `auth.js`, modifiez:
+In `auth.js`, modify:
 
 ```javascript
-SESSION_TIMEOUT: 60 * 60 * 1000  // En millisecondes (60 min ici)
+SESSION_TIMEOUT: 60 * 60 * 1000  // In milliseconds (60 min here)
 ```
 
-## ⚡ Conseils de déploiement
+## ⚡ Deployment Tips
 
-### Pour un petit groupe (< 50 personnes)
+### For Small Groups (< 50 people)
 
-Parfait tel quel ! Les fichiers statiques suffisent.
+Perfect as-is! Static files are sufficient.
 
-### Pour un groupe plus grand
+### For Larger Groups
 
-Envisagez:
+Consider:
 
-1. **Stockage sécurisé du mot de passe** - Utiliser un hash au lieu du mot de passe en clair
-2. **Authentification multi-utilisateurs** - Base de données avec identifiants individuels
-3. **HTTPS obligatoire** - Pour sécuriser la transmission du mot de passe
-4. **Backend server** - Node.js, PHP, Python, etc.
-5. **Logs d'activité** - Trace des connexions et actions
+1. **Secure Password Storage** - Use hash instead of plain text password
+2. **Multi-User Authentication** - Database with individual credentials
+3. **HTTPS Required** - To secure password transmission
+4. **Backend Server** - Node.js, PHP, Python, etc.
+5. **Activity Logs** - Track logins and actions
 
-## 🛡️ Notes de sécurité
+## 🛡️ Security Notes
 
-⚠️ **Cette version est adaptée pour:**
+⚠️ **This version is suitable for:**
 
-- Intranet local d'équipe réduite
-- Environnement de test/démonstration
-- Réseau interne sécurisé
+- Small team intranet
+- Test/demo environment
+- Secure internal network
 
-⚠️ **À éviter en production:**
+⚠️ **Avoid in production:**
 
-- Ne pas exposer sur Internet sans HTTPS
-- Ne pas utiliser pour données sensibles sans chiffrement
-- Implémenter une authentification plus robuste pour > 50 utilisateurs
+- Don't expose to Internet without HTTPS
+- Don't use for sensitive data without encryption
+- Implement stronger authentication for > 50 users
 
 ## 📧 Support
 
-Pour toute question sur l'intranet, contactez votre administrateur système.
+For any questions about the intranet, contact your system administrator.
 '''

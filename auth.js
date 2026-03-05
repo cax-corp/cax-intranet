@@ -1,16 +1,16 @@
-// Configuration de sécurité
+// Security configuration
 const CONFIG = {
-    // Les utilisateurs sont maintenant chargés depuis database.js
+    // Users are now loaded from database.js
     USERS: {},
     SESSION_TIMEOUT: 60 * 60 * 1000 // 1 heure
 };
 
-// Charger les credentials depuis la base de données
+// Load credentials from database
 if (typeof DATABASE !== 'undefined') {
     CONFIG.USERS = DATABASE.getCredentials();
 }
 
-// Gestion simple de l'authentification
+// Simple authentication management
 class AuthManager {
     constructor() {
         this.sessionKey = 'intranetSession';
@@ -30,7 +30,7 @@ class AuthManager {
             return false;
         }
 
-        // Renouveler le timestamp
+        // Renew the timestamp
         sessionStorage.setItem(this.timestampKey, now.toString());
         return true;
     }
@@ -65,14 +65,14 @@ class AuthManager {
         sessionStorage.removeItem('username');
     }
 
-    // Récupérer tous les utilisateurs (builtin + créés + database)
+    // Get all users (built-in + created + database)
     getAllUsers() {
         const createdUsers = JSON.parse(localStorage.getItem(this.usersStorageKey) || '{}');
         const dbUsers = typeof DATABASE !== 'undefined' ? DATABASE.getCredentials() : {};
         return { ...CONFIG.USERS, ...dbUsers, ...createdUsers };
     }
 
-    // Créer un nouvel utilisateur
+    // Create a new user
     createUser(username, password, role = 'user') {
         const allUsers = this.getAllUsers();
         
@@ -88,7 +88,7 @@ class AuthManager {
         createdUsers[username] = password;
         localStorage.setItem(this.usersStorageKey, JSON.stringify(createdUsers));
 
-        // Stocker aussi les infos (username, role, dateCreated)
+        // Save user info (username, role, dateCreated)
         const usersList = JSON.parse(localStorage.getItem(this.usersStorageKey + '_list') || '[]');
         usersList.push({
             username: username,
@@ -101,14 +101,14 @@ class AuthManager {
         return { success: true, message: 'User created successfully' };
     }
 
-    // Récupérer la liste des utilisateurs créés
+    // Get list of created users
     getCreatedUsers() {
         return JSON.parse(localStorage.getItem(this.usersStorageKey + '_list') || '[]');
     }
 
-    // Supprimer un utilisateur
+    // Delete a user
     deleteUser(username) {
-        // Éviter de supprimer les utilisateurs de la database
+        // Avoid deleting database users
         if (typeof DATABASE !== 'undefined' && DATABASE.getEmployeeByUsername(username)) {
             return { success: false, message: 'Cannot delete employee database users' };
         }
@@ -131,7 +131,7 @@ class AuthManager {
 
 const auth = new AuthManager();
 
-// Vérifier protection SEULEMENT sur index.html
+// Check protection ONLY on index.html
 if (window.location.pathname.includes('index.html') || window.location.pathname.endsWith('/')) {
     if (!auth.isAuthenticated()) {
         window.location.href = 'login.html';

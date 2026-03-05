@@ -1,9 +1,9 @@
-// Vérifier l'authentification
+// Check authentication
 if (!auth.isAuthenticated()) {
     window.location.href = 'login.html';
 }
 
-// Données des antennes de CAX Corporation
+// CAX Corporation office locations data
 const locations = [
     {
         id: 1,

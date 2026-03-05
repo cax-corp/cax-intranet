@@ -11,7 +11,7 @@ async function simulateDelay() {
 }
 
 // Loading spinner management for messages
-function showMessagesLoader(message = 'Chargement...') {
+function showMessagesLoader(message = 'Loading...') {
     let loader = document.getElementById('messagesLoader');
     if (!loader) {
         loader = document.createElement('div');
@@ -167,7 +167,7 @@ async function loadConversations() {
         
         // Simulate network delay on first load (not on refresh)
         if (conversationsList.innerHTML === '' || conversationsList.children.length === 0) {
-            showMessagesLoader('Chargement des conversations...');
+            showMessagesLoader('Loading conversations...');
             await simulateDelay();
         }
         
@@ -231,7 +231,7 @@ async function loadMessages(otherUser) {
     try {
         // Show loader on initial load of messages for a conversation
         if (displayedMessageIds.size === 0) {
-            showMessagesLoader('Chargement des messages...');
+            showMessagesLoader('Loading messages...');
             await simulateDelay();
         }
         
@@ -324,7 +324,7 @@ async function sendMessage() {
 
 async function openUsersModal() {
     usersModal.classList.add('active');
-    showMessagesLoader('Chargement des utilisateurs...');
+    showMessagesLoader('Loading users...');
     
     try {
         // Simulate network delay

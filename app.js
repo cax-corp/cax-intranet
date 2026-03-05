@@ -1,4 +1,4 @@
-// Tout initialiser dans DOMContentLoaded pour éviter les conflits de timing
+// Initialize everything in DOMContentLoaded to avoid timing conflicts
 document.addEventListener('DOMContentLoaded', () => {
     
     // Helper functions for loaders
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return new Promise(resolve => setTimeout(resolve, getRandomDelay()));
     };
     
-    window.showLoginLoader = function(message = 'Connexion...') {
+    window.showLoginLoader = function(message = 'Logging in...') {
         let loader = document.getElementById('loginLoader');
         if (!loader) {
             loader = document.createElement('div');
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-    // GESTION DE LA PAGE DE CONNEXION
+    // LOGIN PAGE MANAGEMENT
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         const usernameInput = document.getElementById('username');
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            showLoginLoader('Vérification des identifiants...');
+            showLoginLoader('Verifying credentials...');
             
             // Simulate network delay
             await simulateDelay();
@@ -54,29 +54,29 @@ document.addEventListener('DOMContentLoaded', () => {
             const username = usernameInput.value.trim();
             const password = passwordInput.value;
 
-            // Vérifier le nom d'utilisateur et le mot de passe
+            // Check username and password
             if (auth.login(username, password)) {
-                showLoginLoader('Connexion réussie...');
+                showLoginLoader('Login successful...');
                 
-                // Afficher le message de succès
-                successMessage.textContent = 'Connexion réussie ! Redirection en cours...';
+                // Show success message
+                successMessage.textContent = 'Login successful! Redirecting...';
                 successMessage.classList.add('show');
 
-                // Attendre un peu avant de rediriger
+                // Wait a moment before redirecting
                 await simulateDelay();
                 
-                // Rediriger vers l'intranet
+                // Redirect to intranet
                 window.location.href = 'index.html';
             } else {
                 hideLoginLoader();
                 
-                // Afficher le message d'erreur
-                errorMessage.textContent = 'Identifiant ou mot de passe incorrect. Veuillez réessayer.';
+                // Show error message
+                errorMessage.textContent = 'Invalid username or password. Please try again.';
                 errorMessage.classList.add('show');
                 passwordInput.value = '';
                 usernameInput.focus();
 
-                // Masquer l'erreur après 4 secondes
+                // Hide error after 4 seconds
                 setTimeout(() => {
                     errorMessage.classList.remove('show');
                 }, 4000);
@@ -84,32 +84,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // GESTION DE L'INTRANET PRINCIPAL - NAVIGATION
+    // MAIN INTRANET MANAGEMENT - NAVIGATION
     const navLinks = document.querySelectorAll('.nav-link');
     if (navLinks.length > 0) {
         const sections = document.querySelectorAll('.section');
 
-        // Gestion de la navigation entre les sections
+        // Navigation between sections
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 const sectionName = this.getAttribute('data-section');
                 const href = this.getAttribute('href');
                 
-                // Si c'est un lien vers une autre page (contient .html ou /), naviguer normalement
+                // If it's a link to another page (contains .html or /), navigate normally
                 if (href && href.includes('.html')) {
                     e.preventDefault();
                     window.location.href = href;
                     return;
                 }
                 
-                // Sinon, gérer comme une section (href commence par #)
+                // Otherwise, manage as a section (href starts with #)
                 e.preventDefault();
                 
-                // Retirer la classe active de tous les liens et sections
+                // Remove active class from all links and sections
                 navLinks.forEach(l => l.classList.remove('active'));
                 sections.forEach(s => s.classList.remove('active'));
                 
-                // Ajouter la classe active au lien et à la section cliqués
+                // Add active class to clicked link and section
                 this.classList.add('active');
                 if (sectionName && document.getElementById(sectionName)) {
                     document.getElementById(sectionName).classList.add('active');
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Initialiser la première section
+        // Initialize first section
         if (navLinks.length > 0) {
             navLinks[0].classList.add('active');
             if (sections.length > 0) {
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // GESTION DU PROFIL ET MENU
+    // PROFILE AND MENU MANAGEMENT
     const profileDiv = document.getElementById('profileDiv');
     const profileMenu = document.getElementById('profileMenu');
     const profileLogout = document.getElementById('profileLogout');
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Click sur profil pour toggler le menu
+    // Click on profile to toggle menu
     if (profileDiv) {
         profileDiv.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
         profileLogout.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+            if (confirm('Are you sure you want to logout?')) {
                 auth.logout();
                 setTimeout(() => {
                     window.location.href = 'login.html';
@@ -165,16 +165,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fermer le menu si on clique ailleurs
+    // Close menu if clicking elsewhere
     document.addEventListener('click', (e) => {
         if (profileMenu && !e.target.closest('.navbar-profile-container')) {
             profileMenu.classList.remove('active');
         }
     });
 
-    // GESTION DES BOUTONS ET LIENS DU DASHBOARD
+    // DASHBOARD BUTTONS AND LINKS MANAGEMENT
     
-    // Bouton Support
+    // Support button
     const supportBtn = document.getElementById('supportBtn');
     if (supportBtn) {
         supportBtn.addEventListener('click', (e) => {
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Lien User Management (CEO only)
+    // User Management link (CEO only)
     const usersLink = document.querySelector('.users-link-dashboard');
     if (usersLink) {
         if (auth.isCEO()) {
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Lien Statistics
+    // Statistics link
     const statsLink = document.querySelector('.stats-link-dashboard');
     if (statsLink) {
         statsLink.addEventListener('click', () => {
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Lien HR
+    // HR link
     const hrLink = document.querySelector('.hr-link-dashboard');
     if (hrLink) {
         hrLink.addEventListener('click', () => {
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Lien Locations
+    // Locations link
     const locationsLink = document.querySelector('.locations-link-dashboard');
     if (locationsLink) {
         locationsLink.addEventListener('click', () => {

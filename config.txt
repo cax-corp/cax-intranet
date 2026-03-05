@@ -1,17 +1,17 @@
-# Configuration de l'Intranet CAX
+# CAX Intranet Configuration
 
-## Mot de passe
+## Password
 
 PASSWORD=intranet2026
 
 ## Instructions
 
-1. Ouvert login.html pour accéder à l'intranet
-2. Entrez le mot de passe ci-dessus
-3. Pour changer le mot de passe, modifiez auth.js (ligne 5)
+1. Open login.html to access the intranet
+2. Enter the password above
+3. To change the password, modify auth.js (line 5)
 
-## Notes de sécurité
+## Security Notes
 
-- Le mot de passe est temporairement stocké en sessionStorage
-- La session expire après 1 heure d'inactivité
-- Toutes les données sessionStorage sont supprimées à la fermeture du navigateur
+- The password is temporarily stored in sessionStorage
+- The session expires after 1 hour of inactivity
+- All sessionStorage data is cleared when the browser closes

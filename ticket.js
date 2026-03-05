@@ -1,16 +1,16 @@
-// Vérifier l'authentification
+// Check authentication
 if (!auth.isAuthenticated()) {
     window.location.href = 'login.html';
 }
 
-// Initialiser EmailJS
+// Initialize EmailJS
 emailjs.init("eMji0_caM9w6gI4Us");
 
 const SERVICE_ID = "service_jtz9gjj";
 const TEMPLATE_ID = "template_suvyyd2";
 const RECIPIENT_EMAIL = "thom.barial@gmail.com";
 
-// Gestion du formulaire de ticket
+// Ticket form management
 document.addEventListener('DOMContentLoaded', () => {
     const ticketForm = document.getElementById('ticketForm');
     const successMessage = document.getElementById('successMessage');
@@ -27,11 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = document.getElementById('ticketEmail').value;
             const username = auth.getUsername();
 
-            // Créer un numéro de ticket unique
+            // Create unique ticket number
             const ticketId = 'TKT-' + Date.now();
-            const createdAt = new Date().toLocaleString('fr-FR');
+            const createdAt = new Date().toLocaleString('en-US');
 
-            // Créer l'objet du ticket
+            // Create ticket object
             const ticket = {
                 id: ticketId,
                 title: title,
@@ -45,12 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 updatedAt: createdAt
             };
 
-            // Sauvegarder le ticket en localStorage
+            // Save ticket in localStorage
             let tickets = JSON.parse(localStorage.getItem('supportTickets')) || [];
             tickets.push(ticket);
             localStorage.setItem('supportTickets', JSON.stringify(tickets));
 
-            // Préparer l'email
+            // Prepare email
             const emailParams = {
                 to_email: RECIPIENT_EMAIL,
                 from_email: email,
@@ -64,26 +64,26 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             try {
-                // Envoyer l'email via EmailJS
+                // Send email via EmailJS
                 await emailjs.send(SERVICE_ID, TEMPLATE_ID, emailParams);
 
-                // Afficher le message de succès
+                // Show success message
                 successMessage.style.display = 'block';
                 errorMessage.style.display = 'none';
 
-                // Réinitialiser le formulaire
+                // Reset form
                 ticketForm.reset();
 
-                // Masquer le message après 5 secondes et rediriger
+                // Hide message after 5 seconds and redirect
                 setTimeout(() => {
                     window.location.href = 'index.html';
                 }, 5000);
 
             } catch (error) {
-                console.error('Erreur lors de l\'envoi de l\'email:', error);
+                console.error('Error sending email:', error);
 
-                // Afficher le message d'erreur
-                errorMessage.textContent = 'Erreur lors de la création du ticket. Veuillez réessayer.';
+                // Show error message
+                errorMessage.textContent = 'Error creating ticket. Please try again.';
                 errorMessage.style.display = 'block';
                 successMessage.style.display = 'none';
             }
@@ -91,36 +91,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Fonction pour récupérer les tickets de l'utilisateur
+// Function to get user's tickets
 function getUserTickets() {
     const tickets = JSON.parse(localStorage.getItem('supportTickets')) || [];
     const username = auth.getUsername();
     return tickets.filter(t => t.username === username);
 }
 
-// Fonction pour afficher l'historique des tickets
+// Function to display ticket history
 function displayTicketHistory() {
     const tickets = getUserTickets();
     
     if (tickets.length === 0) {
-        console.log('Aucun ticket');
+        console.log('No tickets');
         return;
     }
 
-    console.log('Vos tickets de support:');
+    console.log('Your support tickets:');
     tickets.forEach(ticket => {
         console.log(`[${ticket.id}] ${ticket.title} - ${ticket.status}`);
     });
 }
 
-                // Rediriger après 2 secondes
+                // Redirect after 2 seconds
                 setTimeout(() => {
                     window.location.href = 'index.html';
                 }, 2000);
             }).catch((error) => {
-                errorMessage.textContent = 'Erreur lors de l\'envoi du ticket. Veuillez réessayer.';
+                errorMessage.textContent = 'Error sending ticket. Please try again.';
                 errorMessage.style.display = 'block';
-                console.error('Erreur EmailJS:', error);
+                console.error('EmailJS Error:', error);
             });
         });
     }

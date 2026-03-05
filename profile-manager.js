@@ -1,5 +1,5 @@
 // ============================================================
-// GESTION DES PROFILS UTILISATEURS - CAX Corporation
+// USER PROFILE MANAGEMENT - CAX Corporation
 // ============================================================
 
 class ProfileManager {
@@ -20,35 +20,35 @@ class ProfileManager {
         };
     }
 
-    // Obtenir le profil d'un utilisateur (depuis le serveur avec fallback localStorage)
+    // Get user profile (from server with localStorage fallback)
     async getProfile(username) {
         try {
-            // Essayer de récupérer depuis le serveur
+            // Try to get from server
             const response = await fetch(`${this.apiBase}/${username}`);
             if (response.ok) {
                 const data = await response.json();
                 const profile = data.profile;
-                // Sauvegarder en cache local
+                // Cache locally
                 this._cacheProfileLocally(username, profile);
                 return profile;
             }
         } catch (error) {
-            console.error('Erreur lors de la récupération du profil depuis le serveur:', error);
+            console.error('Error retrieving profile from server:', error);
         }
 
-        // Fallback: récupérer depuis localStorage
+        // Fallback: get from localStorage
         const profiles = JSON.parse(localStorage.getItem(this.profilesKey) || '{}');
         if (profiles[username]) {
             return profiles[username];
         }
 
-        // Créer un profil par défaut
+        // Create default profile
         const newProfile = {...this.defaultProfile, username: username};
         this.saveProfile(username, newProfile);
         return newProfile;
     }
 
-    // Sauvegarder le profil (sur le serveur + cache local)
+    // Save profile (on server + local cache)
     async saveProfile(username, profileData) {
         const profileToSave = {
             ...profileData,
@@ -56,7 +56,7 @@ class ProfileManager {
         };
 
         try {
-            // Sauvegarder sur le serveur Render
+            // Save on Render server
             const response = await fetch(`${this.apiBase}/${username}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -64,15 +64,15 @@ class ProfileManager {
             });
 
             if (response.ok) {
-                // Sauvegarder aussi en cache local
+                // Also cache locally
                 this._cacheProfileLocally(username, profileToSave);
                 return { success: true, message: 'Profile sauvegardé sur le serveur' };
             }
         } catch (error) {
-            console.error('Erreur lors de la sauvegarde du profil:', error);
+            console.error('Error saving profile:', error);
         }
 
-        // Fallback: sauvegarder seulement en localStorage
+        // Fallback: save only to localStorage
         this._cacheProfileLocally(username, profileToSave);
         return { success: true, message: 'Profile sauvegardé localement' };
     }
