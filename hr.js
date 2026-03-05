@@ -1,4 +1,4 @@
-// Gestion du département HR
+// HR Department Management
 document.addEventListener('DOMContentLoaded', () => {
     const hrCard = document.querySelector('.team-card:nth-child(4)');
     const hrDetails = document.getElementById('hrDetails');
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fermer aussi en cliquant sur le fond sombre
+    // Also close when clicking on dark background
     hrDetails.addEventListener('click', (e) => {
         if (e.target === hrDetails) {
             hrDetails.style.display = 'none';

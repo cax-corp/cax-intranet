@@ -1,9 +1,9 @@
-// Vérifier l'authentification
+// Check authentication
 if (!auth.isAuthenticated()) {
     window.location.href = 'login.html';
 }
 
-// Données statistiques détaillées - CAX Corp, maître du monde
+// Detailed statistics data - CAX Corp, master of the world
 const statsData = {
     totalEmployees: 2847650,
     departments: {
@@ -52,7 +52,7 @@ const statsData = {
     ]
 };
 
-// Initialiser les graphiques
+// Initialize charts
 document.addEventListener('DOMContentLoaded', () => {
     initCharts();
     populateDepartmentTable();

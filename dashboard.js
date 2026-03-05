@@ -1,4 +1,4 @@
-// Données statistiques de l'entreprise - CAX Corp, Maître du Monde
+// Company statistics data - CAX Corp, Master of the World
 const dashboardData = {
     totalEmployees: 2847650,
     departments: {
@@ -34,7 +34,7 @@ const dashboardData = {
     ]
 };
 
-// Initialiser le dashboard
+// Initialize dashboard
 document.addEventListener('DOMContentLoaded', () => {
     const dashboardSection = document.getElementById('dashboard');
     if (dashboardSection) {
@@ -46,7 +46,7 @@ function loadStatistics() {
     const statsCard = document.querySelector('.dashboard-card:first-child');
     
     if (statsCard) {
-        // Garder juste le contenu simple sans données
+        // Keep simple content without data
         statsCard.innerHTML = `
             <h3>📊 Statistics</h3>
             <p>Company data and analytics</p>

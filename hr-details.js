@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Déterminer le rôle (CEO ou utilisateur régulier)
     userRole = currentUser === 'ceo' ? 'ceo' : 'user';
     
-    // Mettre à jour le niveau d'accès
+    // Update access level
     const accessLevel = document.getElementById('accessLevel');
     if (userRole === 'ceo') {
         accessLevel.textContent = 'Full administrative access - CEO';

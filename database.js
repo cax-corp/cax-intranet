@@ -1,7 +1,7 @@
 // ============================================================
-// BASE DE DONNÉES DES EMPLOYÉS - CAX Corporation
+// EMPLOYEE DATABASE - CAX Corporation
 // ============================================================
-// Chaque employé est aussi un utilisateur par défaut du système
+// Each employee is also a default user of the system
 
 const DATABASE = {
     employees: [
@@ -358,27 +358,27 @@ const DATABASE = {
         }
     ],
 
-    // Fonction pour obtenir un employé par username
+    // Function to get an employee by username
     getEmployeeByUsername(username) {
         return this.employees.find(emp => emp.username === username);
     },
 
-    // Fonction pour obtenir un employé par ID
+    // Function to get an employee by ID
     getEmployeeById(id) {
         return this.employees.find(emp => emp.id === id);
     },
 
-    // Fonction pour obtenir tous les employés d'un département
+    // Function to get all employees from a department
     getEmployeesByDepartment(department) {
         return this.employees.filter(emp => emp.department === department);
     },
 
-    // Fonction pour obtenir les employés actifs
+    // Function to get active employees
     getActiveEmployees() {
         return this.employees.filter(emp => emp.status === 'active');
     },
 
-    // Fonction pour obtenir les credentials (username/password) pour l'authentification
+    // Function to get credentials (username/password) for authentication
     getCredentials() {
         const credentials = {};
         this.employees.forEach(emp => {
@@ -387,7 +387,7 @@ const DATABASE = {
         return credentials;
     },
 
-    // Fonction pour ajouter un nouvel employé
+    // Function to add a new employee
     addEmployee(employee) {
         if (this.getEmployeeByUsername(employee.username)) {
             return { success: false, message: 'Employee already exists' };
@@ -399,7 +399,7 @@ const DATABASE = {
         return { success: true, message: 'Employee added successfully', employee: employee };
     },
 
-    // Fonction pour supprimer un employé
+    // Function to delete an employee
     deleteEmployee(username) {
         const index = this.employees.findIndex(emp => emp.username === username);
         if (index !== -1) {
@@ -409,7 +409,7 @@ const DATABASE = {
         return { success: false, message: 'Employee not found' };
     },
 
-    // Fonction pour mettre à jour un employé
+    // Function to update an employee
     updateEmployee(username, updates) {
         const employee = this.getEmployeeByUsername(username);
         if (employee) {
@@ -419,7 +419,7 @@ const DATABASE = {
         return { success: false, message: 'Employee not found' };
     },
 
-    // Fonction pour obtenir les statistiques
+    // Function to get statistics
     getStatistics() {
         const total = this.employees.length;
         const active = this.getActiveEmployees().length;
@@ -443,7 +443,7 @@ const DATABASE = {
     // Messages Storage
     messages: [],
 
-    // Fonction pour ajouter un message
+    // Function to add a message
     sendMessage(sender, receiver, content) {
         const message = {
             id: 'MSG' + Date.now(),
@@ -457,7 +457,7 @@ const DATABASE = {
         return message;
     },
 
-    // Fonction pour obtenir les messages entre deux utilisateurs
+    // Function to get messages between two users
     getConversation(user1, user2) {
         return this.messages.filter(msg => 
             (msg.sender === user1 && msg.receiver === user2) ||
@@ -465,7 +465,7 @@ const DATABASE = {
         ).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
     },
 
-    // Fonction pour obtenir les conversations d'un utilisateur
+    // Function to get user's conversations
     getConversations(username) {
         const conversations = new Map();
         this.messages.forEach(msg => {
@@ -543,12 +543,12 @@ const DATABASE = {
         }
     ],
 
-    // Fonction pour obtenir toutes les divisions
+    // Function to get all divisions
     getDivisions() {
         return this.divisions.sort((a, b) => a.name.localeCompare(b.name));
     },
 
-    // Fonction pour ajouter une division
+    // Function to add a division
     addDivision(division) {
         const newDivision = {
             id: this.divisions.length > 0 ? Math.max(...this.divisions.map(d => d.id)) + 1 : 1,
@@ -562,7 +562,7 @@ const DATABASE = {
         return newDivision;
     },
 
-    // Fonction pour mettre à jour une division
+    // Function to update a division
     updateDivision(id, updates) {
         const division = this.divisions.find(d => d.id === id);
         if (division) {
@@ -572,7 +572,7 @@ const DATABASE = {
         return { success: false, message: 'Division not found' };
     },
 
-    // Fonction pour supprimer une division
+    // Function to delete a division
     deleteDivision(id) {
         const index = this.divisions.findIndex(d => d.id === id);
         if (index !== -1) {

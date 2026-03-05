@@ -166,13 +166,13 @@ const locations = [
 let activePopup = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialiser la carte
+    // Initialize map
     initMap();
     
     // Afficher la liste des localisations
     displayLocationsList();
 
-    // Fermer popup au clic ailleurs
+    // Close popup on click elsewhere
     document.addEventListener('click', (e) => {
         if (activePopup && !e.target.closest('.map-marker') && !e.target.closest('.location-popup-box')) {
             closePopup();
@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Convertir les coordonnées GPS en position sur la carte
+// Convert GPS coordinates to position on map
 function latLongToPercent(lat, lng) {
     // Calibrage manuel pour le fichier world.svg
     
@@ -262,12 +262,12 @@ function showPopup(location, markerElement) {
     let left = markerRect.left - mapRect.left + markerRect.width + 10;
     let top = markerRect.top - mapRect.top - 50;
     
-    // Vérifier si le popup dépasse à droite
+    // Check if popup exceeds on right
     if (left + 280 > mapRect.width) {
         left = markerRect.left - mapRect.left - 290;
     }
     
-    // Vérifier si le popup dépasse en haut
+    // Check if popup exceeds at top
     if (top < 10) {
         top = 10;
     }
@@ -290,7 +290,7 @@ function displayLocationsList() {
     const listContainer = document.getElementById('locationsList');
     const sidebarH3 = document.querySelector('.locations-sidebar h3');
     
-    // Mettre à jour le nombre de localisations
+    // Update number of locations
     sidebarH3.innerHTML = `Offices (${locations.length} locations)`;
 
     listContainer.innerHTML = '';

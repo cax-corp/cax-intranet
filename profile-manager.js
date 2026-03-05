@@ -77,26 +77,26 @@ class ProfileManager {
         return { success: true, message: 'Profile sauvegardé localement' };
     }
 
-    // Mettre en cache le profil en localStorage
+    // Cache profile in localStorage
     _cacheProfileLocally(username, profileData) {
         const profiles = JSON.parse(localStorage.getItem(this.profilesKey) || '{}');
         profiles[username] = profileData;
         localStorage.setItem(this.profilesKey, JSON.stringify(profiles));
     }
 
-    // Mettre à jour une partie du profil
+    // Update part of the profile
     async updateProfile(username, updates) {
         const profile = await this.getProfile(username);
         const updated = {...profile, ...updates};
         return this.saveProfile(username, updated);
     }
 
-    // Ajouter une image de profil
+    // Add profile image
     async setAvatar(username, imageData) {
         return this.updateProfile(username, { avatar: imageData });
     }
 
-    // Ajouter un lien
+    // Add a link
     async addLink(username, title, url) {
         const profile = await this.getProfile(username);
         if (!profile.links) profile.links = [];
@@ -104,7 +104,7 @@ class ProfileManager {
         return this.saveProfile(username, profile);
     }
 
-    // Supprimer un lien
+    // Remove a link
     async removeLink(username, linkIndex) {
         const profile = await this.getProfile(username);
         if (profile.links && profile.links[linkIndex]) {
@@ -114,18 +114,18 @@ class ProfileManager {
         return { success: false, message: 'Link not found' };
     }
 
-    // Obtenir l'avatar
+    // Get avatar
     async getAvatar(username) {
         const profile = await this.getProfile(username);
         return profile.avatar;
     }
 
-    // Supprimer l'avatar
+    // Delete avatar
     async removeAvatar(username) {
         return this.updateProfile(username, { avatar: null });
     }
 
-    // Valider une URL
+    // Validate a URL
     isValidUrl(string) {
         try {
             new URL(string);            return true;
