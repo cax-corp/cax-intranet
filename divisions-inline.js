@@ -8,6 +8,9 @@ const API_BASE = window.location.hostname === 'localhost' || window.location.hos
 
 console.log('Using API endpoint:', API_BASE);
 
+// Local storage key for divisions
+const DIVISIONS_STORAGE_KEY = 'caxDivisions';
+
 // Helper function to add random delay (800-1500ms for realism)
 function getRandomDelay() {
     return Math.random() * 700 + 800; // 800-1500ms
@@ -16,6 +19,26 @@ function getRandomDelay() {
 // Helper to simulate network delay
 async function simulateDelay() {
     return new Promise(resolve => setTimeout(resolve, getRandomDelay()));
+}
+
+// Local storage functions for divisions
+function saveDivisionsLocally(divisions) {
+    try {
+        localStorage.setItem(DIVISIONS_STORAGE_KEY, JSON.stringify(divisions));
+        console.log('Divisions saved to localStorage');
+    } catch (error) {
+        console.error('Error saving divisions to localStorage:', error);
+    }
+}
+
+function loadDivisionsLocally() {
+    try {
+        const stored = localStorage.getItem(DIVISIONS_STORAGE_KEY);
+        return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+        console.error('Error loading divisions from localStorage:', error);
+        return [];
+    }
 }
 
 // Loading spinner management
@@ -178,13 +201,26 @@ async function loadDivisions() {
         
         const divisions = data.divisions || [];
         
+        // Save to localStorage as backup
+        saveDivisionsLocally(divisions);
+        
         displayDivisions(divisions);
     } catch (error) {
-        console.error('Error loading divisions:', error);
-        // Fallback to showing message
-        const grid = document.getElementById('divisionsGrid');
-        if (grid) {
-            grid.innerHTML = `<p style="grid-column: 1/-1; color: #666;">Error loading divisions: ${error.message}</p>`;
+        console.error('Error loading divisions from server:', error);
+        
+        // Fallback to localStorage
+        console.log('Falling back to localStorage...');
+        const localDivisions = loadDivisionsLocally();
+        
+        if (localDivisions.length > 0) {
+            console.log('Loaded divisions from localStorage:', localDivisions);
+            displayDivisions(localDivisions);
+        } else {
+            // No data anywhere
+            const grid = document.getElementById('divisionsGrid');
+            if (grid) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; color: #666;">Error loading divisions. Please try again later.</p>`;
+            }
         }
     } finally {
         hideLoader();
@@ -307,9 +343,29 @@ async function saveDivision() {
         if (!response.ok) {
             throw new Error(`Server error: ${response.status}`);
         }
+
+        const responseData = await response.json();
         
         // Simulate network delay
         await simulateDelay();
+        
+        // Update localStorage with the saved division
+        const localDivisions = loadDivisionsLocally();
+        
+        if (currentDivisionId === null && responseData.division) {
+            // New division - add it
+            localDivisions.push(responseData.division);
+        } else if (currentDivisionId !== null && responseData.division) {
+            // Update existing - find and update
+            const index = localDivisions.findIndex(d => d.id === responseData.division.id);
+            if (index !== -1) {
+                localDivisions[index] = responseData.division;
+            } else {
+                localDivisions.push(responseData.division);
+            }
+        }
+        
+        saveDivisionsLocally(localDivisions);
         
         closeModal();
         loadDivisions();
@@ -318,24 +374,77 @@ async function saveDivision() {
         showSuccessMessage('Division saved successfully!');
     } catch (error) {
         console.error('Error saving division:', error);
-        alert('Error saving division: ' + error.message);
+        
+        // Fallback: save to localStorage anyway
+        try {
+            const localDivisions = loadDivisionsLocally();
+            
+            if (currentDivisionId === null) {
+                // Create new division with local ID
+                const newId = localDivisions.length > 0 ? Math.max(...localDivisions.map(d => d.id || 0)) + 1 : 1;
+                localDivisions.push({
+                    id: newId,
+                    ...divisionData
+                });
+            } else {
+                // Update existing
+                const index = localDivisions.findIndex(d => d.id === currentDivisionId);
+                if (index !== -1) {
+                    localDivisions[index] = {
+                        id: currentDivisionId,
+                        ...divisionData
+                    };
+                } else {
+                    localDivisions.push({
+                        id: currentDivisionId,
+                        ...divisionData
+                    });
+                }
+            }
+            
+            saveDivisionsLocally(localDivisions);
+            
+            closeModal();
+            loadDivisions();
+            
+            alert('Division saved locally (offline mode)');
+            console.log('Division saved to localStorage only');
+        } catch (fallbackError) {
+            console.error('Fallback save also failed:', fallbackError);
+            alert('Error saving division: ' + error.message);
+        }
+        
         hideLoader();
     }
 }
 
 function confirmDelete(id) {
-    // Fetch to get division name
-    fetch(API_BASE)
-        .then(res => res.json())
-        .then(data => {
-            const division = data.divisions.find(d => d.id === id);
-            if (!division) return;
-            
-            if (confirm(`Are you sure you want to delete "${division.name}"?`)) {
-                deleteDivision(id);
-            }
-        })
-        .catch(error => console.error('Error:', error));
+    // Try to get division name from localStorage first, then from server
+    let division = null;
+    
+    // Check localStorage
+    const localDivisions = loadDivisionsLocally();
+    division = localDivisions.find(d => d.id === id);
+    
+    // If not in localStorage, try server
+    if (!division) {
+        fetch(API_BASE)
+            .then(res => res.json())
+            .then(data => {
+                division = data.divisions ? data.divisions.find(d => d.id === id) : null;
+                if (!division) return;
+                
+                if (confirm(`Are you sure you want to delete "${division.name}"?`)) {
+                    deleteDivision(id);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    } else {
+        // Division found in localStorage
+        if (confirm(`Are you sure you want to delete "${division.name}"?`)) {
+            deleteDivision(id);
+        }
+    }
 }
 
 async function deleteDivision(id) {
@@ -355,11 +464,30 @@ async function deleteDivision(id) {
         // Simulate network delay
         await simulateDelay();
         
+        // Remove from localStorage
+        const localDivisions = loadDivisionsLocally();
+        const filtered = localDivisions.filter(d => d.id !== id);
+        saveDivisionsLocally(filtered);
+        
         loadDivisions();
         showSuccessMessage('Division deleted successfully!');
     } catch (error) {
         console.error('Error deleting division:', error);
-        alert('Error deleting division');
+        
+        // Fallback: try to delete from localStorage anyway
+        try {
+            const localDivisions = loadDivisionsLocally();
+            const filtered = localDivisions.filter(d => d.id !== id);
+            saveDivisionsLocally(filtered);
+            
+            loadDivisions();
+            
+            alert('Division deleted locally (offline mode)');
+            console.log('Division removed from localStorage only');
+        } catch (fallbackError) {
+            console.error('Fallback delete also failed:', fallbackError);
+            alert('Error deleting division');
+        }
     }
 }
 
