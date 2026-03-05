@@ -8,6 +8,32 @@ const API_BASE = window.location.hostname === 'localhost' || window.location.hos
 
 console.log('Using API endpoint:', API_BASE);
 
+// Loading spinner management
+function showLoader(message = 'Chargement...') {
+    let loader = document.getElementById('divisionsLoader');
+    if (!loader) {
+        loader = document.createElement('div');
+        loader.id = 'divisionsLoader';
+        loader.innerHTML = `
+            <div class="loader-overlay">
+                <div class="loader-spinner">
+                    <div class="loader-circle"></div>
+                    <p>${message}</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(loader);
+    }
+    loader.style.display = 'flex';
+}
+
+function hideLoader() {
+    const loader = document.getElementById('divisionsLoader');
+    if (loader) {
+        loader.style.display = 'none';
+    }
+}
+
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     try {
@@ -118,6 +144,7 @@ function setupDivisionsEventListeners() {
 
 async function loadDivisions() {
     try {
+        showLoader('Chargement des divisions...');
         console.log('Loading divisions from:', API_BASE);
         const response = await fetch(`${API_BASE}`, {
             method: 'GET',
@@ -145,6 +172,8 @@ async function loadDivisions() {
         if (grid) {
             grid.innerHTML = `<p style="grid-column: 1/-1; color: #666;">Error loading divisions: ${error.message}</p>`;
         }
+    } finally {
+        hideLoader();
     }
 }
 
@@ -217,6 +246,7 @@ function closeModal() {
 }
 
 async function saveDivision() {
+    showLoader('Sauvegarde de la division...');
     const name = document.getElementById('divisionName').value.trim();
     const location = document.getElementById('divisionLocation').value.trim();
     const head = document.getElementById('divisionHead').value.trim();
@@ -225,6 +255,7 @@ async function saveDivision() {
     
     if (!name) {
         alert('Division name is required');
+        hideLoader();
         return;
     }
     
@@ -271,6 +302,7 @@ async function saveDivision() {
     } catch (error) {
         console.error('Error saving division:', error);
         alert('Error saving division: ' + error.message);
+        hideLoader();
     }
 }
 
@@ -291,6 +323,7 @@ function confirmDelete(id) {
 
 async function deleteDivision(id) {
     try {
+        showLoader('Suppression de la division...');
         const response = await fetch(`${API_BASE}/${id}`, {
             method: 'DELETE',
             headers: {
