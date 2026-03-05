@@ -8,6 +8,16 @@ const API_BASE = window.location.hostname === 'localhost' || window.location.hos
 
 console.log('Using API endpoint:', API_BASE);
 
+// Helper function to add random delay (800-1500ms for realism)
+function getRandomDelay() {
+    return Math.random() * 700 + 800; // 800-1500ms
+}
+
+// Helper to simulate network delay
+async function simulateDelay() {
+    return new Promise(resolve => setTimeout(resolve, getRandomDelay()));
+}
+
 // Loading spinner management
 function showLoader(message = 'Chargement...') {
     let loader = document.getElementById('divisionsLoader');
@@ -160,6 +170,10 @@ async function loadDivisions() {
         }
         
         const data = await response.json();
+        
+        // Simulate network delay for visual feedback
+        await simulateDelay();
+        
         console.log('Divisions data received:', data);
         
         const divisions = data.divisions || [];
@@ -294,6 +308,9 @@ async function saveDivision() {
             throw new Error(`Server error: ${response.status}`);
         }
         
+        // Simulate network delay
+        await simulateDelay();
+        
         closeModal();
         loadDivisions();
         
@@ -334,6 +351,9 @@ async function deleteDivision(id) {
         if (!response.ok) {
             throw new Error(`Server error: ${response.status}`);
         }
+        
+        // Simulate network delay
+        await simulateDelay();
         
         loadDivisions();
         showSuccessMessage('Division deleted successfully!');

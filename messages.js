@@ -1,4 +1,41 @@
 // Messages Service
+
+// Helper function to add random delay (800-1500ms for realism)
+function getRandomDelay() {
+    return Math.random() * 700 + 800; // 800-1500ms
+}
+
+// Helper to simulate network delay
+async function simulateDelay() {
+    return new Promise(resolve => setTimeout(resolve, getRandomDelay()));
+}
+
+// Loading spinner management for messages
+function showMessagesLoader(message = 'Chargement...') {
+    let loader = document.getElementById('messagesLoader');
+    if (!loader) {
+        loader = document.createElement('div');
+        loader.id = 'messagesLoader';
+        loader.innerHTML = `
+            <div class="loader-overlay">
+                <div class="loader-spinner">
+                    <div class="loader-circle"></div>
+                    <p>${message}</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(loader);
+    }
+    loader.style.display = 'flex';
+}
+
+function hideMessagesLoader() {
+    const loader = document.getElementById('messagesLoader');
+    if (loader) {
+        loader.style.display = 'none';
+    }
+}
+
 class MessagesService {
     constructor() {
         this.currentConversation = null;
@@ -128,8 +165,15 @@ async function loadConversations() {
     try {
         const conversations = await messagesService.getConversations(currentUsername);
         
+        // Simulate network delay on first load (not on refresh)
+        if (conversationsList.innerHTML === '' || conversationsList.children.length === 0) {
+            showMessagesLoader('Chargement des conversations...');
+            await simulateDelay();
+        }
+        
         if (conversations.length === 0) {
             conversationsList.innerHTML = '<div style="padding: 20px; text-align: center; color: #999; font-size: 12px;">No conversations yet</div>';
+            hideMessagesLoader();
             return;
         }
 
@@ -158,8 +202,10 @@ async function loadConversations() {
             div.addEventListener('click', () => selectConversation(conversation.otherUser));
             conversationsList.appendChild(div);
         });
+        hideMessagesLoader();
     } catch (error) {
         console.error('Error loading conversations:', error);
+        hideMessagesLoader();
     }
 }
 
@@ -183,11 +229,18 @@ async function selectConversation(otherUser) {
 
 async function loadMessages(otherUser) {
     try {
+        // Show loader on initial load of messages for a conversation
+        if (displayedMessageIds.size === 0) {
+            showMessagesLoader('Chargement des messages...');
+            await simulateDelay();
+        }
+        
         const messages = await messagesService.getConversation(currentUsername, otherUser);
         
         if (messages.length === 0) {
             messagesArea.innerHTML = '<div class="messages-empty">No messages yet. Start a conversation!</div>';
             displayedMessageIds.clear();
+            hideMessagesLoader();
             return;
         }
 
@@ -212,8 +265,10 @@ async function loadMessages(otherUser) {
         
         // Scroll to bottom
         messagesArea.scrollTop = messagesArea.scrollHeight;
+        hideMessagesLoader();
     } catch (error) {
         console.error('Error loading messages:', error);
+        hideMessagesLoader();
     }
 }
 
@@ -269,8 +324,12 @@ async function sendMessage() {
 
 async function openUsersModal() {
     usersModal.classList.add('active');
+    showMessagesLoader('Chargement des utilisateurs...');
     
     try {
+        // Simulate network delay
+        await simulateDelay();
+        
         const allUsers = DATABASE.getActiveEmployees();
         const currentUserData = DATABASE.getEmployeeByUsername(currentUsername);
         
@@ -291,8 +350,10 @@ async function openUsersModal() {
             });
             usersList.appendChild(div);
         });
+        hideMessagesLoader();
     } catch (error) {
         console.error('Error loading users:', error);
+        hideMessagesLoader();
     }
 }
 

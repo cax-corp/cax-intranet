@@ -2,6 +2,42 @@
 let currentUsername = null;
 let currentProfile = null;
 
+// Helper function to add random delay (800-1500ms for realism)
+function getRandomDelay() {
+    return Math.random() * 700 + 800; // 800-1500ms
+}
+
+// Helper to simulate network delay
+async function simulateDelay() {
+    return new Promise(resolve => setTimeout(resolve, getRandomDelay()));
+}
+
+// Loading spinner management for profile
+function showProfileLoader(message = 'Chargement...') {
+    let loader = document.getElementById('profileLoader');
+    if (!loader) {
+        loader = document.createElement('div');
+        loader.id = 'profileLoader';
+        loader.innerHTML = `
+            <div class="loader-overlay">
+                <div class="loader-spinner">
+                    <div class="loader-circle"></div>
+                    <p>${message}</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(loader);
+    }
+    loader.style.display = 'flex';
+}
+
+function hideProfileLoader() {
+    const loader = document.getElementById('profileLoader');
+    if (loader) {
+        loader.style.display = 'none';
+    }
+}
+
 // Initialize profile page
 document.addEventListener('DOMContentLoaded', function() {
     // Check if user is logged in
@@ -21,7 +57,13 @@ async function loadProfileData() {
     if (!currentUsername) return;
 
     try {
+        showProfileLoader('Chargement du profil...');
+        
         const profile = await profileManager.getProfile(currentUsername);
+        
+        // Simulate network delay
+        await simulateDelay();
+        
         currentProfile = profile;
 
         // Display name and role
@@ -67,8 +109,10 @@ async function loadProfileData() {
 
         // Load links
         displayLinks();
+        hideProfileLoader();
     } catch (error) {
         console.error('Erreur lors du chargement du profil:', error);
+        hideProfileLoader();
     }
 }
 
