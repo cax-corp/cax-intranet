@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Five Nights at CAX Corp</title>
+  <style>
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+    html, body {
+      height: 100%; width: 100%;
+      background: #000; color: #fff;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    /* ─── SCREENS ─── */
+    .screen {
+      position: fixed; inset: 0;
+      display: none; flex-direction: column;
+    }
+    .screen.active { display: flex; }
+
+    /* ─── TITLE ─── */
+    #titleScreen {
+      background: radial-gradient(ellipse at center, #0e0000 0%, #000 100%);
+      align-items: center; justify-content: center;
+      padding: 20px; text-align: center; gap: 12px;
+    }
+    .t-logo { font-size: 52px; line-height: 1; }
+    .t-title {
+      font-size: clamp(18px, 5vw, 26px); font-weight: bold;
+      color: #ff6b00; text-shadow: 0 0 24px #ff4400;
+      letter-spacing: 2px; line-height: 1.3;
+    }
+    .t-sub { font-size: 12px; color: #666; }
+    .t-lore {
+      font-size: 11px; color: #555; max-width: 300px;
+      line-height: 1.7; font-style: italic;
+    }
+    #nightSelector { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .night-btn {
+      padding: 10px 14px; background: #111; border: 1px solid #333;
+      color: #aaa; font-family: inherit; font-size: 13px; cursor: pointer;
+      border-radius: 3px; min-width: 50px; min-height: 48px;
+      transition: border-color .15s, color .15s;
+    }
+    .night-btn.sel { background: #1a0800; border-color: #ff6b00; color: #ff6b00; }
+    .night-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+    #startBtn {
+      padding: 14px 40px; background: #ff6b00; border: none;
+      color: #000; font-family: inherit; font-size: 18px; font-weight: bold;
+      cursor: pointer; border-radius: 3px; letter-spacing: 2px;
+      box-shadow: 0 0 20px #ff4400;
+    }
+    .t-hint { font-size: 10px; color: #333; }
+
+    /* ─── GAME ─── */
+    #gameScreen { background: #000; }
+
+    /* HUD */
+    #hud {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 12px; height: 42px; flex-shrink: 0;
+      background: #040404; border-bottom: 1px solid #0e0e0e;
+    }
+    #hudNight { color: #ff6b00; font-weight: bold; font-size: 12px; }
+    #hudTime  { font-size: 17px; font-weight: bold; letter-spacing: 1px; }
+    #hudPwr   { display: flex; align-items: center; gap: 5px; font-size: 12px; }
+    #pBar     {
+      width: 55px; height: 7px; background: #111;
+      border-radius: 4px; overflow: hidden; flex-shrink: 0;
+    }
+    #pFill    { height: 100%; width: 100%; background: #0f0; transition: width .4s, background .4s; }
+
+    /* MAIN VIEW */
+    #mainView { flex: 1; position: relative; overflow: hidden; min-height: 0; }
+
+    /* OFFICE */
+    #officeView {
+      width: 100%; height: 100%;
+      display: flex; position: relative;
+    }
+    .hall {
+      width: 28%; height: 100%;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    #lHall { background: linear-gradient(to right, #030303, #080808); }
+    #rHall { background: linear-gradient(to left,  #030303, #080808); }
+    #lHall.lit { background: linear-gradient(to right, #161200, #080808); }
+    #rHall.lit { background: linear-gradient(to left,  #161200, #080808); }
+    .door {
+      position: absolute; bottom: 0;
+      width: 68%; height: 88%;
+      background: linear-gradient(180deg, #1c1c1c 0%, #111 100%);
+      border-top: 2px solid #333;
+      transition: transform .25s ease;
+    }
+    #lHall .door { right: 0; transform: translateY(102%); }
+    #rHall .door { left:  0; transform: translateY(102%); }
+    #lHall.closed .door { transform: translateY(0); }
+    #rHall.closed .door { transform: translateY(0); }
+    .anim-in-hall {
+      position: absolute; font-size: 46px;
+      text-shadow: 0 0 25px rgba(255,80,0,.9);
+      opacity: 0; transition: opacity .25s; z-index: 2;
+    }
+    .anim-in-hall.show { opacity: 1; }
+    #officeCenter {
+      flex: 1; height: 100%;
+      background: linear-gradient(180deg, #060606 0%, #0b0b0b 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 6px;
+    }
+    .desk-emoji { font-size: 36px; }
+    .desk-label { font-size: 10px; color: #2a2a2a; letter-spacing: 1px; }
+
+    /* Fredward power-out overlay */
+    #fredOverlay {
+      display: none; position: absolute; inset: 0; z-index: 20;
+      background: #000;
+      flex-direction: column; align-items: center; justify-content: center;
+    }
+    #fredOverlay.vis { display: flex; }
+    #fredChar {
+      font-size: 90px;
+      animation: fredfloat 3s ease-in forwards;
+    }
+    @keyframes fredfloat {
+      from { transform: scale(.15); opacity: .4; }
+      to   { transform: scale(2.8); opacity: 1; }
+    }
+    .fred-text { color: #ff6b00; font-size: 14px; margin-top: 20px; }
+
+    /* CAMERA VIEW */
+    #camView {
+      position: absolute; inset: 0;
+      background: rgba(0,16,0,.97);
+      flex-direction: column; padding: 10px; gap: 8px;
+      display: none;
+    }
+    #camView.open { display: flex; }
+    .cam-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .cam-hdr-title { font-size: 11px; color: #0f0; font-weight: bold; }
+    .blink { width: 8px; height: 8px; background: #f00; border-radius: 50%; animation: blink 1s infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    #camFeed {
+      flex: 1; background: #010d01; border: 1px solid #0a2a0a;
+      position: relative; display: flex; align-items: center; justify-content: center;
+      overflow: hidden; min-height: 0;
+    }
+    #camFeed::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(0deg,
+        transparent, transparent 3px,
+        rgba(0,255,0,.03) 3px, rgba(0,255,0,.03) 4px);
+    }
+    #camRoomLabel {
+      position: absolute; top: 8px; left: 8px;
+      font-size: 10px; color: #0d0; opacity: .7; z-index: 2;
+    }
+    #camRoomContent { text-align: center; z-index: 2; padding: 10px; }
+    .cam-room-icon { font-size: 48px; display: block; margin-bottom: 10px; }
+    .cam-chars { display: flex; gap: 12px; justify-content: center; font-size: 36px; }
+    .cam-empty { font-size: 11px; color: #0a0; margin-top: 8px; }
+    .cam-barry-warn { font-size: 11px; color: #f00; font-weight: bold; margin-top: 6px; }
+    .cam-barry-pct  { font-size: 10px; color: #666; margin-top: 4px; }
+    /* scan line */
+    #camScan {
+      position: absolute; left: 0; right: 0; height: 120%;
+      background: linear-gradient(transparent, rgba(0,255,0,.04), transparent);
+      animation: scan 3.5s linear infinite; pointer-events: none; z-index: 1;
+    }
+    @keyframes scan { from { top: -120%; } to { top: 100%; } }
+    /* camera room buttons */
+    #camRooms {
+      display: flex; gap: 6px; overflow-x: auto;
+      -webkit-overflow-scrolling: touch; padding-bottom: 4px; flex-shrink: 0;
+    }
+    .cam-room-btn {
+      flex-shrink: 0; padding: 0 12px;
+      background: #001400; border: 1px solid #0a3a0a;
+      color: #0d0; font-family: inherit; font-size: 10px; cursor: pointer;
+      border-radius: 3px; white-space: nowrap;
+      height: 44px; display: flex; align-items: center;
+    }
+    .cam-room-btn.sel { background: #0a3000; border-color: #0f0; }
+
+    /* CONTROLS */
+    #controls {
+      background: #050505; border-top: 1px solid #0e0e0e;
+      padding: 8px 10px; flex-shrink: 0;
+    }
+    .ctrl-row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .ctrl-row:last-child { margin-bottom: 0; }
+    .cbtn {
+      flex: 1; min-height: 52px; padding: 8px 4px;
+      background: #111; border: 1px solid #2a2a2a;
+      color: #ccc; font-family: inherit; cursor: pointer;
+      border-radius: 5px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 3px;
+      transition: background .1s, border-color .1s, color .1s;
+      font-size: 12px;
+    }
+    .cbtn .icon { font-size: 20px; line-height: 1; }
+    .cbtn .lbl  { font-size: 9px; color: #555; letter-spacing: .5px; }
+    .cbtn.door-on  { background: #120000; border-color: #c00; color: #f88; }
+    .cbtn.door-on .lbl { color: #f44; }
+    .cbtn.light-on { background: #131000; border-color: #cc0; color: #ff0; }
+    .cbtn.cam-on   { background: #001200; border-color: #0a0; color: #0f0; }
+    .cbtn.cam-on .lbl { color: #0a0; }
+    /* spacer between doors */
+    .ctrl-spacer { flex: 1; }
+
+    /* ─── GAME OVER ─── */
+    #goScreen {
+      background: #000; align-items: center;
+      justify-content: center; text-align: center; gap: 10px;
+    }
+    #jsChar {
+      font-size: 110px; display: block;
+      animation: shake .4s infinite;
+    }
+    @keyframes shake {
+      0%,100% { transform: translate(0,0) rotate(0); }
+      25%      { transform: translate(-5px,2px) rotate(-3deg); }
+      75%      { transform: translate(5px,-2px) rotate(3deg); }
+    }
+    .go-title  { font-size: 30px; color: #d00; font-weight: bold; text-shadow: 0 0 20px #f00; }
+    .go-sub    { font-size: 13px; color: #555; }
+    .go-btn    {
+      padding: 14px 28px; border: none; font-family: inherit;
+      font-size: 15px; cursor: pointer; border-radius: 3px; margin: 4px;
+    }
+
+    /* ─── NIGHT COMPLETE ─── */
+    #winScreen {
+      background: #040200; align-items: center;
+      justify-content: center; text-align: center; gap: 10px;
+    }
+    .win-star  { font-size: 72px; }
+    .win-title { font-size: 24px; color: #ff6b00; font-weight: bold; }
+    .win-sub   { font-size: 13px; color: #666; }
+    .win-btn   {
+      padding: 14px 28px; border: none; font-family: inherit;
+      font-size: 15px; font-weight: bold; cursor: pointer;
+      border-radius: 3px; margin: 4px;
+    }
+
+    /* ─── ALL NIGHTS COMPLETE ─── */
+    #allWinScreen {
+      background: #000408; align-items: center;
+      justify-content: center; text-align: center;
+      padding: 24px; gap: 12px;
+    }
+    .aw-trophy { font-size: 64px; }
+    .aw-title  { font-size: 26px; color: #ff6b00; font-weight: bold; }
+    .aw-sub    { font-size: 13px; color: #666; }
+    .aw-lore   { font-size: 11px; color: #444; max-width: 280px; line-height: 1.7; font-style: italic; }
+    .aw-btn    {
+      padding: 14px 30px; background: #ff6b00; border: none;
+      color: #000; font-family: inherit; font-size: 16px;
+      font-weight: bold; cursor: pointer; border-radius: 3px;
+    }
+
+    /* power-out darkening */
+    .power-dark { filter: brightness(0.05); pointer-events: none; }
+
+    /* low-power flicker */
+    @keyframes flicker {
+      0%,100%  { opacity: 1; }
+      50%      { opacity: .85; }
+    }
+    .flicker { animation: flicker .18s infinite; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     TITLE SCREEN
+═══════════════════════════════════════════ -->
+<div id="titleScreen" class="screen active">
+  <div class="t-logo">🏢</div>
+  <h1 class="t-title">FIVE NIGHTS AT<br>CAX CORP™</h1>
+  <p class="t-sub">A parody survival horror experience</p>
+  <p class="t-lore">
+    "Welcome, new security guard!<br>
+    Your job is simple: survive until 6 AM.<br>
+    Our office mascots are… a little <em>unpredictable</em> after hours.<br>
+    — Management"
+  </p>
+  <div id="nightSelector"></div>
+  <button id="startBtn">▶ START NIGHT</button>
+  <p class="t-hint">🔊 Enable sound for full experience</p>
+</div>
+
+<!-- ══════════════════════════════════════════
+     GAME SCREEN
+═══════════════════════════════════════════ -->
+<div id="gameScreen" class="screen">
+
+  <!-- HUD -->
+  <div id="hud">
+    <span id="hudNight">NIGHT 1</span>
+    <span id="hudTime">12 AM</span>
+    <span id="hudPwr">
+      <span id="pBar"><span id="pFill"></span></span>
+      <span id="pTxt">100%</span>
+    </span>
+  </div>
+
+  <!-- MAIN VIEW -->
+  <div id="mainView">
+
+    <!-- OFFICE VIEW -->
+    <div id="officeView">
+      <div id="lHall" class="hall">
+        <span class="anim-in-hall" id="lAnim"></span>
+        <div class="door"></div>
+      </div>
+
+      <div id="officeCenter">
+        <span class="desk-emoji">🖥️</span>
+        <span class="desk-label">CAX CORP SECURITY</span>
+      </div>
+
+      <div id="rHall" class="hall">
+        <span class="anim-in-hall" id="rAnim"></span>
+        <div class="door"></div>
+      </div>
+    </div>
+
+    <!-- FREDWARD POWER-OUT OVERLAY -->
+    <div id="fredOverlay">
+      <span id="fredChar">🎩</span>
+      <span class="fred-text">Hello there…</span>
+    </div>
+
+    <!-- CAMERA VIEW -->
+    <div id="camView">
+      <div class="cam-hdr">
+        <span class="cam-hdr-title">📷 CAX CORP SECURITY CAMERAS</span>
+        <span class="blink"></span>
+      </div>
+      <div id="camFeed">
+        <div id="camScan"></div>
+        <span id="camRoomLabel">CAM 1A — Show Room</span>
+        <div id="camRoomContent"></div>
+      </div>
+      <div id="camRooms"></div>
+    </div>
+
+  </div><!-- /mainView -->
+
+  <!-- CONTROLS -->
+  <div id="controls">
+    <div class="ctrl-row">
+      <button class="cbtn" id="bLL">
+        <span class="icon">💡</span>
+        <span class="lbl">HOLD — LEFT LIGHT</span>
+      </button>
+      <button class="cbtn" id="bCam">
+        <span class="icon">📷</span>
+        <span class="lbl">CAMERAS</span>
+      </button>
+      <button class="cbtn" id="bRL">
+        <span class="icon">💡</span>
+        <span class="lbl">HOLD — RIGHT LIGHT</span>
+      </button>
+    </div>
+    <div class="ctrl-row">
+      <button class="cbtn" id="bLD">
+        <span class="icon">🚪</span>
+        <span class="lbl">LEFT DOOR</span>
+      </button>
+      <div class="ctrl-spacer"></div>
+      <button class="cbtn" id="bRD">
+        <span class="icon">🚪</span>
+        <span class="lbl">RIGHT DOOR</span>
+      </button>
+    </div>
+  </div>
+
+</div><!-- /gameScreen -->
+
+<!-- ══════════════════════════════════════════
+     GAME OVER SCREEN
+═══════════════════════════════════════════ -->
+<div id="goScreen" class="screen">
+  <span id="jsChar">🐻</span>
+  <div class="go-title">GAME OVER</div>
+  <div class="go-sub" id="goSub">You didn't survive the night!</div>
+  <button class="go-btn" id="bRetry"  style="background:#c00;color:#fff;">TRY AGAIN</button>
+  <button class="go-btn" id="bGoMenu" style="background:#222;color:#aaa;">MENU</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     NIGHT COMPLETE SCREEN
+═══════════════════════════════════════════ -->
+<div id="winScreen" class="screen">
+  <div class="win-star">⭐</div>
+  <div class="win-title" id="winTitle">NIGHT 1 COMPLETE!</div>
+  <div class="win-sub">You survived until 6 AM!</div>
+  <button class="win-btn" id="bNext"    style="background:#ff6b00;color:#000;">NEXT NIGHT →</button>
+  <button class="win-btn" id="bWinMenu" style="background:#222;color:#aaa;">MENU</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ALL NIGHTS COMPLETE SCREEN
+═══════════════════════════════════════════ -->
+<div id="allWinScreen" class="screen">
+  <div class="aw-trophy">🏆</div>
+  <div class="aw-title">CONGRATULATIONS!</div>
+  <div class="aw-sub">All 5 nights survived!</div>
+  <p class="aw-lore">
+    "Effective immediately you are promoted to Senior Security Specialist.
+    Please do not discuss what you witnessed during your shifts.
+    — Management"
+  </p>
+  <button class="aw-btn" id="bPlayAgain">PLAY AGAIN</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     GAME SCRIPT
+═══════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ──────────────────────────────────────────
+   AUDIO  (Web Audio API — no files needed)
+────────────────────────────────────────── */
+let _ctx = null;
+function ctx() {
+  if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
+  return _ctx;
+}
+
+function tone(freq, dur, type = 'sine', vol = 0.3, delay = 0) {
+  try {
+    const c = ctx(), t = c.currentTime + delay;
+    const o = c.createOscillator(), g = c.createGain();
+    o.connect(g); g.connect(c.destination);
+    o.type = type; o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(MIN_GAIN, t + dur);
+    o.start(t); o.stop(t + dur + 0.01);
+  } catch (_) {}
+}
+
+function noise(dur, vol = 0.3) {
+  try {
+    const c = ctx();
+    const sz = Math.ceil(c.sampleRate * dur);
+    const buf = c.createBuffer(1, sz, c.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < sz; i++) d[i] = Math.random() * 2 - 1;
+    const src = c.createBufferSource(), g = c.createGain();
+    src.buffer = buf; src.connect(g); g.connect(c.destination);
+    g.gain.setValueAtTime(vol, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(MIN_GAIN, c.currentTime + dur);
+    src.start(); src.stop(c.currentTime + dur + 0.01);
+  } catch (_) {}
+}
+
+const snd = {
+  door:      () => { tone(110, .12, 'square', .45); tone(70, .2, 'sawtooth', .3, .1); },
+  cam:       () => { tone(900, .04, 'sine', .1); tone(700, .04, 'sine', .08, .05); },
+  hour:      () => { tone(440, .3, 'sine', .2); tone(554, .3, 'sine', .18, .35); },
+  jumpscare: () => { noise(.6, .95); tone(130, .5, 'sawtooth', .7); },
+  powerOut:  () => { tone(220, .4, 'square', .4); tone(110, 1.2, 'sine', .3, .4); },
+  fredMusic: () => {
+    [220, 196, 185, 165].forEach((f, i) => tone(f, .4, 'sine', .18, i * .52));
+  },
+  ambient:   () => { tone(55, 2, 'sine', .04); },
+};
+
+/* ──────────────────────────────────────────
+   CONSTANTS
+────────────────────────────────────────── */
+const TOTAL_NIGHTS = 5;
+// Real milliseconds that equal one in-game hour (50 s × 6 hours = 5 min per night)
+const IN_GAME_HOUR_MS  = 50000;
+const TOTAL_HOURS      = 6; // 12 AM → 6 AM
+
+// Audio — exponentialRampToValueAtTime cannot reach 0; use this floor value
+const MIN_GAIN = 0.0001;
+
+// Frame-time cap: prevents huge time jumps when the tab is backgrounded
+const MAX_FRAME_DELTA_MS = 200;
+
+// Attack grace period (ms): how long after an animatronic reaches the door before they attack
+const ATTACK_GRACE_BASE_MS    = 2000;
+const ATTACK_GRACE_RANDOM_MS  = 1500;
+const BARRY_GRACE_BASE_MS     = 1200;
+const BARRY_GRACE_RANDOM_MS   = 800;
+
+// Rooms shown on camera
+const ROOMS = [
+  { id: 'showroom',      label: 'CAM 1A — Show Room',      icon: '🎭' },
+  { id: 'kitchen',       label: 'CAM 2A — Kitchen',         icon: '🍕' },
+  { id: 'westhall',      label: 'CAM 3A — West Hall',       icon: '🌑' },
+  { id: 'easthall',      label: 'CAM 3B — East Hall',       icon: '🌑' },
+  { id: 'supply',        label: 'CAM 4B — Supply Closet',   icon: '📦' },
+  { id: 'westhallcorner',label: 'CAM 4A — W. Hall Corner',  icon: '🌑' },
+];
+
+// Animatronic definitions
+// path = ordered rooms; last room = "at door" position
+const ANIM_DEFS = [
+  {
+    id: 'fredward', name: 'Fredward C. Bear (CEO)', emoji: '🐻',
+    startRoom: 'showroom',
+    path: ['showroom', 'westhall', 'westhallcorner'],
+    side: 'left',
+    // activity[nightIndex] — Fredward starts slow but becomes fearsome
+    acts: [0, 0, 2, 4, 7],
+    special: 'fredward', // invisible when watched from showroom camera
+  },
+  {
+    id: 'bonita', name: 'Bonita (CFO)', emoji: '🐰',
+    startRoom: 'showroom',
+    path: ['showroom', 'westhall', 'westhallcorner'],
+    side: 'left',
+    acts: [3, 5, 7, 10, 14],
+  },
+  {
+    id: 'chuck', name: 'Chuck (HR Manager)', emoji: '🐔',
+    startRoom: 'showroom',
+    path: ['showroom', 'kitchen', 'easthall'],
+    side: 'right',
+    acts: [1, 3, 5, 8, 12],
+  },
+  {
+    id: 'barry', name: 'Barry the Intern', emoji: '🦊',
+    startRoom: 'supply',
+    path: ['supply', 'westhall', 'westhallcorner'],
+    side: 'left',
+    acts: [5, 7, 10, 14, 18],
+    special: 'barry', // charges up; rushes all at once
+  },
+];
+
+/* ──────────────────────────────────────────
+   GAME STATE
+────────────────────────────────────────── */
+const state = {
+  night: 1,
+  unlockedNights: 1,
+  power: 100,
+  gameTime: 0,    // fractional hours (0–6)
+  lastHour: 0,
+  doors:  { left: false, right: false },
+  lights: { left: false, right: false },
+  camOpen: false,
+  currentCam: 'showroom',
+  anims: [],
+  running: false,
+  powerOut: false,
+  fredwardTimer: 0,
+  fredwardVisible: false,
+  lastTick: 0,
+};
+
+/* ──────────────────────────────────────────
+   PERSISTENCE
+────────────────────────────────────────── */
+function saveProgress() {
+  try { localStorage.setItem('fncc_nights', String(state.unlockedNights)); } catch (_) {}
+}
+function loadProgress() {
+  try {
+    const v = parseInt(localStorage.getItem('fncc_nights') || '1', 10);
+    state.unlockedNights = Math.min(isNaN(v) ? 1 : v, TOTAL_NIGHTS);
+  } catch (_) {}
+}
+
+/* ──────────────────────────────────────────
+   ANIMATRONIC HELPERS
+────────────────────────────────────────── */
+function initAnims(night) {
+  const ni = night - 1;
+  return ANIM_DEFS.map(def => ({
+    ...def,
+    pathIdx: 0,
+    currentRoom: def.startRoom,
+    atDoor: false,
+    activity: def.acts[ni] ?? 0,
+    nextMoveAt: Date.now() + moveInterval(def.acts[ni] ?? 0),
+    // barry-specific
+    barryCharge: 0,
+    barryMaxCharge: Math.max(3, 10 - Math.floor((def.acts[ni] ?? 0) / 2)),
+    barryRunning: false,
+    barryNextChargeAt: Date.now(),
+    // attack grace
+    attackAt: Infinity,
+  }));
+}
+
+function moveInterval(activity) {
+  // Higher activity = shorter interval (moves faster)
+  return Math.max(800, (21 - activity) * 600) + Math.random() * 1000;
+}
+
+function resetAnim(a) {
+  a.pathIdx = 0;
+  a.currentRoom = a.startRoom;
+  a.atDoor = false;
+  a.attackAt = Infinity;
+  a.barryCharge = 0;
+  a.barryRunning = false;
+  a.nextMoveAt = Date.now() + moveInterval(a.activity) * 2;
+  a.barryNextChargeAt = Date.now() + 3000;
+}
+
+/* ──────────────────────────────────────────
+   ANIMATRONIC AI TICK
+────────────────────────────────────────── */
+function tickAnims() {
+  if (!state.running || state.powerOut) return;
+  const now = Date.now();
+
+  for (const a of state.anims) {
+    if (a.special === 'barry') {
+      tickBarry(a, now);
+    } else {
+      tickNormal(a, now);
+    }
+  }
+}
+
+function tickNormal(a, now) {
+  if (a.atDoor) return; // waiting at door
+  if (now < a.nextMoveAt) return;
+
+  // Roll to move
+  if (Math.random() * 20 > a.activity) {
+    a.nextMoveAt = now + moveInterval(a.activity);
+    return;
+  }
+
+  // Fredward special: stays put if player is watching the showroom camera
+  if (a.special === 'fredward') {
+    if (state.camOpen && state.currentCam === 'showroom' && a.pathIdx === 0) {
+      a.nextMoveAt = now + moveInterval(a.activity);
+      return;
+    }
+  }
+
+  // Advance to next room
+  if (a.pathIdx < a.path.length - 1) {
+    a.pathIdx++;
+    a.currentRoom = a.path[a.pathIdx];
+  }
+
+  // Reached door position?
+  if (a.pathIdx === a.path.length - 1) {
+    a.atDoor = true;
+    a.attackAt = now + ATTACK_GRACE_BASE_MS + Math.random() * ATTACK_GRACE_RANDOM_MS;
+  }
+
+  a.nextMoveAt = now + moveInterval(a.activity);
+}
+
+function tickBarry(a, now) {
+  if (a.barryRunning) {
+    // Barry is rushing — check if he's reached the door
+    if (now >= a.nextMoveAt) {
+      if (a.pathIdx < a.path.length - 1) {
+        a.pathIdx++;
+        a.currentRoom = a.path[a.pathIdx];
+        a.nextMoveAt = now + 350; // runs fast
+      }
+      if (a.pathIdx === a.path.length - 1) {
+        a.atDoor = true;
+        a.barryRunning = false;
+        a.attackAt = now + BARRY_GRACE_BASE_MS + Math.random() * BARRY_GRACE_RANDOM_MS;
+      }
+    }
+    return;
+  }
+
+  if (a.atDoor) return;
+
+  // Build charge
+  if (now < a.barryNextChargeAt) return;
+  a.barryNextChargeAt = now + Math.max(800, (20 - a.activity) * 400);
+
+  // Checking supply cam reduces Barry's charge
+  if (state.camOpen && state.currentCam === 'supply') {
+    a.barryCharge = Math.max(0, a.barryCharge - 1);
+    return;
+  }
+
+  a.barryCharge++;
+
+  // Fully charged → RUSH
+  if (a.barryCharge >= a.barryMaxCharge) {
+    a.barryCharge = 0;
+    a.barryRunning = true;
+    // Reset to start of path so he runs through all rooms
+    a.pathIdx = 0;
+    a.currentRoom = a.path[0];
+    a.nextMoveAt = now + 400;
+  }
+}
+
+/* ──────────────────────────────────────────
+   ATTACK CHECK
+────────────────────────────────────────── */
+function checkAttacks() {
+  const now = Date.now();
+  for (const a of state.anims) {
+    if (!a.atDoor) continue;
+    if (now < a.attackAt) continue;
+
+    const doorClosed = state.doors[a.side];
+    if (!doorClosed) {
+      triggerGameOver(a);
+      return true;
+    } else {
+      // Door blocked them — might leave
+      if (Math.random() < 0.25) {
+        resetAnim(a);
+      } else {
+        a.attackAt = now + 1000 + Math.random() * 1000; // try again soon after door blocks
+      }
+    }
+  }
+  return false;
+}
+
+/* ──────────────────────────────────────────
+   POWER
+────────────────────────────────────────── */
+function drainRate() {
+  let r = 0.5; // base %/s
+  if (state.camOpen)         r += 0.5;
+  if (state.doors.left)      r += 0.5;
+  if (state.doors.right)     r += 0.5;
+  if (state.lights.left)     r += 0.25;
+  if (state.lights.right)    r += 0.25;
+  return r;
+}
+
+/* ──────────────────────────────────────────
+   HUD / DISPLAY
+────────────────────────────────────────── */
+function hourStr(h) {
+  if (h === 0) return '12 AM';
+  if (h < 6)  return `${h} AM`;
+  return '6 AM';
+}
+
+function updateHUD() {
+  document.getElementById('hudNight').textContent = `NIGHT ${state.night}`;
+  document.getElementById('hudTime').textContent  = hourStr(Math.floor(state.gameTime));
+  const pct = Math.max(0, Math.round(state.power));
+  document.getElementById('pTxt').textContent     = `${pct}%`;
+  const fill = document.getElementById('pFill');
+  fill.style.width = `${pct}%`;
+  const col = pct > 50 ? '#0f0' : pct > 25 ? '#ff0' : pct > 10 ? '#f80' : '#f00';
+  fill.style.background = col;
+  document.getElementById('hudPwr').style.color = col;
+  // Flicker effect at low power
+  document.getElementById('gameScreen').classList.toggle('flicker', pct < 15 && !state.powerOut);
+}
+
+/* ──────────────────────────────────────────
+   OFFICE VIEW
+────────────────────────────────────────── */
+function updateOffice() {
+  const lHall = document.getElementById('lHall');
+  const rHall = document.getElementById('rHall');
+  const lAnim = document.getElementById('lAnim');
+  const rAnim = document.getElementById('rAnim');
+
+  lHall.classList.toggle('closed', state.doors.left);
+  rHall.classList.toggle('closed', state.doors.right);
+
+  const lightL = state.lights.left  && !state.powerOut;
+  const lightR = state.lights.right && !state.powerOut;
+  lHall.classList.toggle('lit', lightL);
+  rHall.classList.toggle('lit', lightR);
+
+  // Find who's at left / right door
+  const leftAnim  = state.anims.find(a => a.atDoor && a.side === 'left');
+  const rightAnim = state.anims.find(a => a.atDoor && a.side === 'right');
+
+  if (leftAnim && lightL) {
+    lAnim.textContent = leftAnim.emoji;
+    lAnim.classList.add('show');
+  } else {
+    lAnim.classList.remove('show');
+  }
+  if (rightAnim && lightR) {
+    rAnim.textContent = rightAnim.emoji;
+    rAnim.classList.add('show');
+  } else {
+    rAnim.classList.remove('show');
+  }
+}
+
+/* ──────────────────────────────────────────
+   CAMERA VIEW
+────────────────────────────────────────── */
+
+// Escape a string for safe insertion into an HTML attribute or text node
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function updateCamFeed() {
+  const room = ROOMS.find(r => r.id === state.currentCam);
+  if (!room) return;
+  document.getElementById('camRoomLabel').textContent = room.label;
+
+  const here = state.anims.filter(a => a.currentRoom === state.currentCam);
+  const barry = state.anims.find(a => a.id === 'barry');
+
+  // Build static parts (room icon + status labels) as HTML — all values are
+  // hardcoded strings or escaped numbers, so they are safe to use here.
+  let html = `<span class="cam-room-icon">${room.icon}</span>`;
+
+  if (here.length) {
+    // Build the chars div safely: emoji via text content, name via escaped attribute
+    const charsHtml = here.map(a =>
+      `<span title="${escHtml(a.name)}">${a.emoji}</span>`
+    ).join('');
+    html += `<div class="cam-chars">${charsHtml}</div>`;
+  } else {
+    html += `<div class="cam-empty">— EMPTY —</div>`;
+  }
+
+  if (room.id === 'supply' && barry) {
+    if (barry.barryRunning) {
+      html += `<div class="cam-barry-warn">⚠️ BARRY IS RUNNING!!</div>`;
+    } else {
+      const pct = Math.round((barry.barryCharge / barry.barryMaxCharge) * 100);
+      html += `<div class="cam-barry-pct">Barry charge: ${pct}%</div>`;
+    }
+  }
+
+  document.getElementById('camRoomContent').innerHTML = html;
+}
+
+function setupCamRooms() {
+  const el = document.getElementById('camRooms');
+  el.innerHTML = '';
+  ROOMS.forEach(room => {
+    const btn = document.createElement('button');
+    btn.className = 'cam-room-btn' + (room.id === state.currentCam ? ' sel' : '');
+    btn.textContent = room.label.split('—')[0].trim();
+    btn.dataset.room = room.id;
+    btn.addEventListener('click', () => {
+      snd.cam();
+      state.currentCam = room.id;
+      document.querySelectorAll('.cam-room-btn').forEach(b =>
+        b.classList.toggle('sel', b.dataset.room === room.id));
+      updateCamFeed();
+    });
+    el.appendChild(btn);
+  });
+}
+
+/* ──────────────────────────────────────────
+   CONTROL BUTTONS
+────────────────────────────────────────── */
+function updateButtons() {
+  const bLD = document.getElementById('bLD');
+  const bRD = document.getElementById('bRD');
+  const bCam = document.getElementById('bCam');
+  const bLL = document.getElementById('bLL');
+  const bRL = document.getElementById('bRL');
+
+  bLD.classList.toggle('door-on',  state.doors.left);
+  bRD.classList.toggle('door-on',  state.doors.right);
+  bCam.classList.toggle('cam-on',  state.camOpen);
+  bLL.classList.toggle('light-on', state.lights.left);
+  bRL.classList.toggle('light-on', state.lights.right);
+
+  bLD.querySelector('.lbl').textContent = state.doors.left  ? 'DOOR CLOSED' : 'LEFT DOOR';
+  bRD.querySelector('.lbl').textContent = state.doors.right ? 'DOOR CLOSED' : 'RIGHT DOOR';
+  bCam.querySelector('.lbl').textContent = state.camOpen ? 'CLOSE CAM' : 'CAMERAS';
+}
+
+/* ──────────────────────────────────────────
+   SCREENS
+────────────────────────────────────────── */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ──────────────────────────────────────────
+   POWER OUT
+────────────────────────────────────────── */
+function triggerPowerOut() {
+  state.powerOut = true;
+  state.doors  = { left: false, right: false };
+  state.lights = { left: false, right: false };
+  state.camOpen = false;
+  state.fredwardTimer = 0;
+
+  document.getElementById('camView').classList.remove('open');
+  document.getElementById('officeView').classList.add('power-dark');
+  updateButtons();
+  snd.powerOut();
+}
+
+/* ──────────────────────────────────────────
+   GAME OVER
+────────────────────────────────────────── */
+function triggerGameOver(anim) {
+  state.running = false;
+  snd.jumpscare();
+  document.getElementById('jsChar').textContent = anim.emoji;
+  document.getElementById('goSub').textContent  = `${anim.name} got you!`;
+  setTimeout(() => showScreen('goScreen'), 150);
+}
+
+/* ──────────────────────────────────────────
+   WIN NIGHT
+────────────────────────────────────────── */
+function winNight() {
+  state.running = false;
+  snd.hour(); setTimeout(snd.hour, 380);
+
+  if (state.night < TOTAL_NIGHTS) {
+    state.unlockedNights = Math.max(state.unlockedNights, state.night + 1);
+    saveProgress();
+  }
+
+  document.getElementById('winTitle').textContent = `NIGHT ${state.night} COMPLETE!`;
+  setTimeout(() => {
+    showScreen(state.night >= TOTAL_NIGHTS ? 'allWinScreen' : 'winScreen');
+  }, 500);
+}
+
+/* ──────────────────────────────────────────
+   GAME LOOP
+────────────────────────────────────────── */
+function gameLoop(ts) {
+  if (!state.running) return;
+
+  const delta = Math.min(ts - state.lastTick, MAX_FRAME_DELTA_MS);
+  state.lastTick = ts;
+
+  if (state.powerOut) {
+    // Power-out sequence
+    state.fredwardTimer += delta;
+    if (state.fredwardTimer >= 5000 && !state.fredwardVisible) {
+      state.fredwardVisible = true;
+      document.getElementById('fredOverlay').classList.add('vis');
+      document.getElementById('fredChar').textContent = '🐻';
+      snd.fredMusic();
+    }
+    if (state.fredwardTimer >= 9000) {
+      const fredDef = ANIM_DEFS.find(a => a.id === 'fredward');
+      triggerGameOver(fredDef);
+      return;
+    }
+    requestAnimationFrame(gameLoop);
+    return;
+  }
+
+  // Advance time
+  state.gameTime += delta / IN_GAME_HOUR_MS;
+  const curHour = Math.floor(state.gameTime);
+
+  // Hour chime
+  if (curHour !== state.lastHour) {
+    state.lastHour = curHour;
+    if (curHour <= 5) snd.hour();
+  }
+
+  // Win condition
+  if (state.gameTime >= TOTAL_HOURS) {
+    winNight();
+    return;
+  }
+
+  // Power drain
+  state.power -= drainRate() * (delta / 1000);
+  if (state.power <= 0) {
+    state.power = 0;
+    triggerPowerOut();
+    requestAnimationFrame(gameLoop);
+    return;
+  }
+
+  // Animatronic AI
+  tickAnims();
+
+  // Attack check
+  if (checkAttacks()) return;
+
+  // Occasional ambient
+  if (Math.random() < 0.0008) snd.ambient();
+
+  // Update display
+  updateHUD();
+  updateOffice();
+  if (state.camOpen) updateCamFeed();
+
+  requestAnimationFrame(gameLoop);
+}
+
+/* ──────────────────────────────────────────
+   START / RESET NIGHT
+────────────────────────────────────────── */
+function startNight(night) {
+  ctx(); // ensure audio context initialized
+
+  state.night        = night;
+  state.power        = 100;
+  state.gameTime     = 0;
+  state.lastHour     = 0;
+  state.doors        = { left: false, right: false };
+  state.lights       = { left: false, right: false };
+  state.camOpen      = false;
+  state.currentCam   = 'showroom';
+  state.running      = true;
+  state.powerOut     = false;
+  state.fredwardTimer    = 0;
+  state.fredwardVisible  = false;
+  state.anims        = initAnims(night);
+  state.lastTick     = performance.now();
+
+  // Reset UI
+  document.getElementById('camView').classList.remove('open');
+  document.getElementById('fredOverlay').classList.remove('vis');
+  document.getElementById('officeView').classList.remove('power-dark');
+  document.getElementById('gameScreen').classList.remove('flicker');
+  document.getElementById('lHall').classList.remove('closed', 'lit');
+  document.getElementById('rHall').classList.remove('closed', 'lit');
+  document.getElementById('lAnim').classList.remove('show');
+  document.getElementById('rAnim').classList.remove('show');
+
+  updateHUD();
+  updateOffice();
+  updateButtons();
+  setupCamRooms();
+
+  showScreen('gameScreen');
+  requestAnimationFrame(gameLoop);
+}
+
+/* ──────────────────────────────────────────
+   TITLE SCREEN SETUP
+────────────────────────────────────────── */
+function setupTitle() {
+  loadProgress();
+  const sel = document.getElementById('nightSelector');
+  sel.innerHTML = '';
+
+  for (let n = 1; n <= TOTAL_NIGHTS; n++) {
+    const btn = document.createElement('button');
+    btn.className  = 'night-btn' + (n === 1 ? ' sel' : '');
+    btn.textContent = `NIGHT ${n}`;
+    btn.disabled    = n > state.unlockedNights;
+    btn.dataset.night = n;
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.night-btn').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel');
+      state.night = n;
+    });
+    sel.appendChild(btn);
+  }
+  state.night = 1;
+}
+
+/* ──────────────────────────────────────────
+   CONTROL EVENT LISTENERS
+────────────────────────────────────────── */
+function setupControls() {
+  // Camera toggle
+  document.getElementById('bCam').addEventListener('click', () => {
+    if (state.powerOut) return;
+    state.camOpen = !state.camOpen;
+    snd.cam();
+    document.getElementById('camView').classList.toggle('open', state.camOpen);
+    if (state.camOpen) updateCamFeed();
+    updateButtons();
+  });
+
+  // Door buttons
+  document.getElementById('bLD').addEventListener('click', () => {
+    if (state.powerOut) return;
+    state.doors.left = !state.doors.left;
+    snd.door();
+    updateOffice();
+    updateButtons();
+  });
+  document.getElementById('bRD').addEventListener('click', () => {
+    if (state.powerOut) return;
+    state.doors.right = !state.doors.right;
+    snd.door();
+    updateOffice();
+    updateButtons();
+  });
+
+  // Light buttons — hold to illuminate
+  function setLight(side, val, btn) {
+    if (state.powerOut) return;
+    state.lights[side] = val;
+    btn.classList.toggle('light-on', val);
+    updateOffice();
+  }
+
+  const bLL = document.getElementById('bLL');
+  const bRL = document.getElementById('bRL');
+
+  ['mousedown', 'touchstart'].forEach(e => {
+    bLL.addEventListener(e, ev => { ev.preventDefault(); setLight('left',  true,  bLL); }, { passive: false });
+    bRL.addEventListener(e, ev => { ev.preventDefault(); setLight('right', true,  bRL); }, { passive: false });
+  });
+  ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(e => {
+    bLL.addEventListener(e, () => setLight('left',  false, bLL));
+    bRL.addEventListener(e, () => setLight('right', false, bRL));
+  });
+}
+
+/* ──────────────────────────────────────────
+   MENU / RETRY / NEXT BUTTON LISTENERS
+────────────────────────────────────────── */
+document.getElementById('startBtn').addEventListener('click', () => {
+  ctx();
+  startNight(state.night);
+});
+
+document.getElementById('bRetry').addEventListener('click', () => startNight(state.night));
+document.getElementById('bGoMenu').addEventListener('click', () => { setupTitle(); showScreen('titleScreen'); });
+document.getElementById('bWinMenu').addEventListener('click', () => { setupTitle(); showScreen('titleScreen'); });
+document.getElementById('bPlayAgain').addEventListener('click', () => { setupTitle(); showScreen('titleScreen'); });
+
+document.getElementById('bNext').addEventListener('click', () => {
+  const next = state.night + 1;
+  if (next > TOTAL_NIGHTS) {
+    showScreen('allWinScreen');
+  } else {
+    startNight(next);
+  }
+});
+
+/* ──────────────────────────────────────────
+   BOOT
+────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  setupTitle();
+  setupControls();
+  showScreen('titleScreen');
+});
+</script>
+</body>
+</html>
